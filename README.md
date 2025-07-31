@@ -1,4 +1,4 @@
-# 📋 Small Business PO Percentage Dashboard
+# Small Business PO Percentage Dashboard
 
 **Cal Poly SLO AI Summer Camp - Supplier Diversity Analysis Project**
 
@@ -10,12 +10,11 @@ Shows the **percentage of Purchase Orders (POs)** going to small businesses and 
 **Target**: 25% of POs should go to small businesses  
 **Gap**: Need to transition 110 more POs to small businesses
 
-## 🚀 How to Run
+## 🚀 How to Run Locally
 
 ```bash
 python run_po_dashboard.py
 ```
-
 Opens at: http://localhost:8503
 
 ## 📊 What You'll See
@@ -25,6 +24,7 @@ Opens at: http://localhost:8503
 - **Implementation Plan**: Phased approach to reach 25%
 - **Quick Wins**: Top PO transition opportunities
 - **Supplier Analysis**: Which suppliers have most POs to transition
+- **Professional UI**: Clean Bootstrap icons instead of emojis
 
 ## 📁 Project Structure
 
@@ -35,10 +35,11 @@ supplier-diversity/
 │   ├── *.csv                            # Analysis results data
 │   └── *.md                             # Documentation
 ├── frontend/
-│   ├── po_quantity_dashboard.py         # Main dashboard
+│   ├── po_quantity_dashboard.py         # Main Streamlit dashboard
 │   └── po_quantity_analytics.py         # Data processing
-├── run_po_dashboard.py                  # Easy run script
-└── requirements.txt                     # Dependencies
+├── run_po_dashboard.py                  # Dashboard launcher
+├── requirements.txt                     # Dependencies
+└── DEPLOYMENT.md                        # Deployment instructions
 ```
 
 ## 🔧 Requirements
@@ -46,6 +47,10 @@ supplier-diversity/
 ```bash
 pip install streamlit plotly pandas numpy scikit-learn
 ```
+
+## 🌐 Deploy to Web
+
+See [DEPLOYMENT.md](DEPLOYMENT.md) for instructions to deploy this dashboard as a public website.
 
 ## 💡 Key Insight
 
