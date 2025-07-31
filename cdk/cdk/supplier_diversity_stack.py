@@ -18,7 +18,7 @@ class SupplierDiversityStack(Stack):
             self, "GitHubConnectionArn",
             type="String",
             description="ARN of the GitHub connection for App Runner",
-            default="arn:aws:apprunner:us-west-2:123456789012:connection/supplier-diversity-github"
+            default="arn:aws:apprunner:us-west-2:819351093526:connection/supplier-diversity-github/53cd8ad4e0984547aa2de65ff39de471"
         )
 
         # Create IAM role for App Runner instance
@@ -43,7 +43,7 @@ class SupplierDiversityStack(Stack):
                         value="main"
                     ),
                     code_configuration=apprunner.CfnService.CodeConfigurationProperty(
-                        configuration_source="CONFIGURATION_FILE"  # Uses apprunner.yaml
+                        configuration_source="REPOSITORY"  # Uses apprunner.yaml
                     )
                 ),
                 authentication_configuration=apprunner.CfnService.AuthenticationConfigurationProperty(
