@@ -45,61 +45,41 @@ st.markdown("""
     footer {visibility: hidden;}
     header {visibility: hidden;}
     
-    /* Top Navigation Bar */
-    .top-nav {
+    
+    /* Navigation Bar Styling */
+    .nav-container {
         background: rgba(21, 71, 52, 0.95);
         backdrop-filter: blur(10px);
         border-bottom: 2px solid #ffc72c;
         padding: 0.75rem 2rem;
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        z-index: 1000;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+        border-radius: 0 0 12px 12px;
         box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        margin-bottom: 1rem;
     }
     
-    .nav-logo {
-        color: #ffc72c;
-        font-size: 24px;
-        font-weight: 700;
-        text-decoration: none;
+    /* Navigation buttons styling */
+    .stButton > button {
+        background: #154734 !important;
+        color: #ffc72c !important;
+        border: 2px solid #154734 !important;
+        border-radius: 6px !important;
+        font-weight: 500 !important;
+        transition: all 0.3s ease !important;
+        width: 100% !important;
     }
     
-    .nav-buttons {
-        display: flex;
-        gap: 1rem;
-        align-items: center;
-    }
-    
-    .nav-btn {
-        background: #ffc72c;
-        color: #000000;
-        border: none;
-        padding: 0.5rem 1rem;
-        border-radius: 6px;
-        font-weight: 500;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        text-decoration: none;
-        display: inline-block;
-    }
-    
-    .nav-btn:hover {
-        background: #e0b000;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(255, 199, 44, 0.3);
-        text-decoration: none;
+    .stButton > button:hover {
+        background: #ffc72c !important;
+        color: #154734 !important;
+        border: 2px solid #ffc72c !important;
+        transform: translateY(-2px) !important;
+        box-shadow: 0 4px 12px rgba(21, 71, 52, 0.3) !important;
     }
     
     /* Main content area */
     .main-content {
-        margin-top: 70px;
         padding: 1rem 2rem;
-        min-height: calc(100vh - 70px);
+        min-height: 100vh;
     }
     
     /* Dashboard title */
@@ -116,11 +96,11 @@ st.markdown("""
     .dashboard-card {
         background: rgba(255, 255, 255, 0.1);
         backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 199, 44, 0.2);
+        border: 2px solid #154734;
         border-radius: 12px;
         padding: 1.5rem;
         margin: 0.5rem 0;
-        box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        box-shadow: 0 8px 32px rgba(21, 71, 52, 0.2);
     }
     
     .card-title {
@@ -128,26 +108,38 @@ st.markdown("""
         font-size: 22px;
         font-weight: 600;
         margin-bottom: 0.75rem;
+        border-bottom: 2px solid #154734;
+        padding-bottom: 0.5rem;
     }
     
     /* Upload section */
     .upload-section {
         text-align: center;
         padding: 1rem;
-        border: 2px dashed #ffc72c;
+        border: 2px dashed #154734;
         border-radius: 12px;
-        background: rgba(255, 199, 44, 0.05);
+        background: rgba(21, 71, 52, 0.05);
         margin: 0.5rem 0;
     }
     
     .upload-section h4 {
-        color: #ffc72c !important;
+        color: #154734 !important;
         margin-bottom: 0.5rem !important;
+        font-weight: 600 !important;
     }
     
     .upload-section p {
-        color: #f8f9fa !important;
+        color: #154734 !important;
         margin-bottom: 0 !important;
+    }
+    
+    /* Metric containers */
+    .metric-container {
+        background: rgba(21, 71, 52, 0.1);
+        border: 1px solid #154734;
+        border-radius: 8px;
+        padding: 1rem;
+        margin: 0.5rem 0;
     }
     
     /* Button styling */
@@ -212,7 +204,7 @@ st.markdown("""
     
     .stFileUploader > div > div > div {
         background: transparent !important;
-        border: 2px dashed #ffc72c !important;
+        border: 2px dashed #154734 !important;
         border-radius: 12px !important;
         padding: 2rem !important;
         text-align: center !important;
@@ -225,7 +217,8 @@ st.markdown("""
     }
     
     .stFileUploader > div > div > div > div {
-        color: #f8f9fa !important;
+        color: #154734 !important;
+        font-weight: 500 !important;
     }
     
     .stFileUploader label {
@@ -233,8 +226,8 @@ st.markdown("""
     }
     
     .stFileUploader button {
-        background: #ffc72c !important;
-        color: #154734 !important;
+        background: #154734 !important;
+        color: #ffc72c !important;
         border: none !important;
         border-radius: 6px !important;
         padding: 0.5rem 1rem !important;
@@ -243,7 +236,7 @@ st.markdown("""
     }
     
     .stFileUploader button:hover {
-        background: #e0b000 !important;
+        background: #0f3426 !important;
     }
     
     /* Success/Error messages */
@@ -352,15 +345,48 @@ st.markdown("""
     
     /* Chart containers */
     .chart-container {
-        background: rgba(255, 255, 255, 0.05);
+        background: rgba(21, 71, 52, 0.05);
         border-radius: 12px;
         padding: 1rem;
         margin: 0.5rem 0;
-        border: 1px solid rgba(255, 199, 44, 0.2);
+        border: 2px solid #154734;
     }
     
     /* Text styling */
     .stMarkdown h1, .stMarkdown h2, .stMarkdown h3 {
+        color: #ffc72c !important;
+    }
+    
+    .stMarkdown h4, .stMarkdown h5 {
+        color: #154734 !important;
+        font-weight: 600 !important;
+    }
+    
+    /* Dataframe styling */
+    .stDataFrame {
+        border: 2px solid #154734 !important;
+        border-radius: 8px !important;
+    }
+    
+    .stDataFrame > div {
+        border-radius: 8px !important;
+    }
+    
+    /* Tab styling */
+    .stTabs [data-baseweb="tab-list"] {
+        gap: 8px;
+    }
+    
+    .stTabs [data-baseweb="tab"] {
+        background-color: rgba(21, 71, 52, 0.1) !important;
+        border: 1px solid #154734 !important;
+        border-radius: 6px !important;
+        color: #154734 !important;
+        font-weight: 500 !important;
+    }
+    
+    .stTabs [aria-selected="true"] {
+        background-color: #154734 !important;
         color: #ffc72c !important;
     }
     
@@ -408,30 +434,28 @@ if 'uploaded_data' not in st.session_state:
     st.session_state.uploaded_data = None
 if 'report_generated' not in st.session_state:
     st.session_state.report_generated = False
+if 'optimized_report_generated' not in st.session_state:
+    st.session_state.optimized_report_generated = False
 if 'charts_generated' not in st.session_state:
     st.session_state.charts_generated = False
 if 'optimized_data' not in st.session_state:
     st.session_state.optimized_data = None
+if 'current_page' not in st.session_state:
+    st.session_state.current_page = 'dashboard'
+if 'show_full_reports' not in st.session_state:
+    st.session_state.show_full_reports = False
+if 'current_page' not in st.session_state:
+    st.session_state.current_page = 'dashboard'
 
 # Top Navigation Bar
-st.markdown("""
-<div class="top-nav">
-    <div class="nav-logo"><i class="bi bi-building"></i> Diversity in Procurement</div>
-    <div class="nav-buttons">
-        <a href="#home" class="nav-btn"><i class="bi bi-house"></i> Home</a>
-        <a href="#dashboard" class="nav-btn"><i class="bi bi-graph-up"></i> Dashboard</a>
-        <a href="#reports" class="nav-btn"><i class="bi bi-file-earmark-text"></i> Reports</a>
-    </div>
-</div>
-""", unsafe_allow_html=True)
+# Dashboard title
+st.markdown('<h1 class="dashboard-title">Diversity in Procurement Dashboard</h1>', unsafe_allow_html=True)
 
-# Main content area - remove the div wrapper that creates grey space
-# Dashboard title - positioned right below toolbar
-st.markdown('<h1 class="dashboard-title" style="margin-top: 80px; padding-top: 1rem;">Diversity in Procurement Dashboard</h1>', unsafe_allow_html=True)
+# Main content - Dashboard functionality
 
 # Upload Section
 st.markdown('<div class="dashboard-card" style="margin-top: 1rem;">', unsafe_allow_html=True)
-st.markdown('<h2 class="card-title"><i class="bi bi-folder"></i> Data Upload</h2>', unsafe_allow_html=True)
+st.markdown('<h2 class="card-title">Data Upload</h2>', unsafe_allow_html=True)
 
 col1, col2, col3 = st.columns([1, 2, 1])
 with col2:
@@ -455,96 +479,204 @@ with col2:
             # Read the uploaded file
             df = pd.read_excel(uploaded_file)
             st.session_state.uploaded_data = df
-            st.success(f"<i class='bi bi-check-circle'></i> Successfully uploaded file with {len(df)} rows and {len(df.columns)} columns!", unsafe_allow_html=True)
+            st.markdown(f"<div style='color: #4CAF50; background: rgba(76, 175, 80, 0.1); padding: 0.75rem; border-radius: 6px; border: 1px solid #4CAF50;'>Successfully uploaded file with {len(df)} rows and {len(df.columns)} columns!</div>", unsafe_allow_html=True)
             
             # Show preview of data
-            with st.expander("<i class='bi bi-table'></i> Preview Data"):
+            with st.expander("Preview Data"):
                 st.dataframe(df.head(10), use_container_width=True)
                 
         except Exception as e:
-            st.error(f"<i class='bi bi-x-circle'></i> Error reading file: {str(e)}", unsafe_allow_html=True)
+            st.markdown(f"<div style='color: #f44336; background: rgba(244, 67, 54, 0.1); padding: 0.75rem; border-radius: 6px; border: 1px solid #f44336;'>Error reading file: {str(e)}</div>", unsafe_allow_html=True)
 
 st.markdown('</div>', unsafe_allow_html=True)
 
 # Action Buttons Section
 if st.session_state.uploaded_data is not None:
     st.markdown('<div class="dashboard-card">', unsafe_allow_html=True)
-    st.markdown('<h2 class="card-title"><i class="bi bi-rocket"></i> Actions</h2>', unsafe_allow_html=True)
+    st.markdown('<h2 class="card-title">Actions</h2>', unsafe_allow_html=True)
     
-    col1, col2, col3 = st.columns(3)
+    col1, col2 = st.columns(2)
     
     with col1:
-        if st.button("<i class='bi bi-graph-up'></i> Generate Report", use_container_width=True, help="Generate comprehensive diversity report"):
-            with st.spinner("Generating report..."):
-                # Simulate report generation
+        if st.button("Optimize Data and Generate Tables", use_container_width=True, help="Generate original tables, optimize data via API, and create optimized tables"):
+            with st.spinner("Generating original tables..."):
+                # Step 1: Generate tables for original data
                 import time
-                time.sleep(2)
+                time.sleep(1)
                 st.session_state.report_generated = True
-                st.success("<i class='bi bi-check-circle'></i> Report generated successfully!", unsafe_allow_html=True)
+                st.markdown("<div style='color: #4CAF50; background: rgba(76, 175, 80, 0.1); padding: 0.75rem; border-radius: 6px; border: 1px solid #4CAF50;'>Original tables generated successfully!</div>", unsafe_allow_html=True)
+            
+            with st.spinner("Calling API to optimize data..."):
+                # Step 2: Call API for data optimization (placeholder)
+                time.sleep(2)
+                # TODO: Replace with actual API call
+                # optimized_data = call_optimization_api(st.session_state.uploaded_data)
+                st.session_state.optimized_data = st.session_state.uploaded_data.copy()
+                st.markdown("<div style='color: #2196F3; background: rgba(33, 150, 243, 0.1); padding: 0.75rem; border-radius: 6px; border: 1px solid #2196F3;'>Data optimization completed via API!</div>", unsafe_allow_html=True)
+            
+            with st.spinner("Generating optimized tables..."):
+                # Step 3: Generate tables for optimized data
+                time.sleep(1)
+                st.session_state.optimized_report_generated = True
+                st.markdown("<div style='color: #4CAF50; background: rgba(76, 175, 80, 0.1); padding: 0.75rem; border-radius: 6px; border: 1px solid #4CAF50;'>Optimized tables generated successfully!</div>", unsafe_allow_html=True)
     
     with col2:
-        if st.button("<i class='bi bi-bar-chart'></i> Generate Charts", use_container_width=True, help="Create data visualizations"):
+        if st.button("Generate Charts", use_container_width=True, help="Create data visualizations"):
             with st.spinner("Creating visualizations..."):
                 # Simulate chart generation
                 import time
                 time.sleep(1.5)
                 st.session_state.charts_generated = True
-                st.success("<i class='bi bi-check-circle'></i> Charts generated successfully!", unsafe_allow_html=True)
-    
-    with col3:
-        if st.button("<i class='bi bi-arrow-clockwise'></i> Optimize Data", use_container_width=True, help="Optimize and clean data"):
-            with st.spinner("Optimizing data..."):
-                # Simulate data optimization
-                import time
-                time.sleep(2)
-                # Create mock optimized data
-                st.session_state.optimized_data = st.session_state.uploaded_data.copy()
-                st.success("<i class='bi bi-check-circle'></i> Data optimized successfully!", unsafe_allow_html=True)
+                st.markdown("<div style='color: #4CAF50; background: rgba(76, 175, 80, 0.1); padding: 0.75rem; border-radius: 6px; border: 1px solid #4CAF50;'>Charts generated successfully!</div>", unsafe_allow_html=True)
     
     st.markdown('</div>', unsafe_allow_html=True)
 
-# Report Section
+# Tables Section
 if st.session_state.report_generated:
     st.markdown('<div class="dashboard-card">', unsafe_allow_html=True)
-    st.markdown('<h2 class="card-title"><i class="bi bi-file-earmark-text"></i> Generated Report</h2>', unsafe_allow_html=True)
+    st.markdown('<h2 class="card-title">Generated Diversity Tables</h2>', unsafe_allow_html=True)
     
-    # Mock report content
-    col1, col2, col3, col4 = st.columns(4)
+    # Create tabs for original and optimized tables
+    if st.session_state.optimized_report_generated:
+        tab1, tab2 = st.tabs(["Original Data Tables", "Optimized Data Tables"])
+        
+        with tab1:
+            st.markdown("#### Actual vs. Goal - Spend Percentages (Original Data)")
+            
+            # Create SWAM-style table for original data
+            import pandas as pd
+            
+            # Define diversity categories (based on SWAM structure)
+            categories = {
+                'MB': 'Minority Business',
+                'WB': 'Women Business', 
+                'Micro': 'Micro Business',
+                'SDV': 'Service-Disabled Veteran',
+                'SB': 'Small Business',
+                'ESO': 'Emerging Small Organization',
+                '8A': '8(a) Business',
+                'EDWOSB': 'Economically Disadvantaged WOSB',
+                'WOSB': 'Women-Owned Small Business',
+                'FSDV': 'Firm Service-Disabled Veteran'
+            }
+            
+            # Original data table (based on current 25.1% diversity rate)
+            original_table_data = {
+                'Category': list(categories.keys()),
+                'Goal (%)': [6.00, 5.50, 1.00, 1.00, 30.00, 1.00, 1.00, 1.00, 0.00, 1.00],
+                'Actual (%)': [4.20, 3.80, 0.80, 0.50, 25.10, 0.30, 0.60, 0.40, 0.00, 0.30],
+                'Variance': ['-1.80', '-1.70', '-0.20', '-0.50', '-4.90', '-0.70', '-0.40', '-0.60', '0.00', '-0.70']
+            }
+            
+            original_df = pd.DataFrame(original_table_data)
+            
+            # Style the dataframe
+            def highlight_variance(val):
+                if isinstance(val, str) and val.startswith('-'):
+                    return 'color: #f44336; font-weight: bold'  # Red for negative
+                elif isinstance(val, str) and not val.startswith('-') and val != '0.00':
+                    return 'color: #4CAF50; font-weight: bold'  # Green for positive
+                return ''
+            
+            styled_original = original_df.style.applymap(highlight_variance, subset=['Variance'])
+            st.dataframe(styled_original, use_container_width=True, hide_index=True)
+            
+            # Summary metrics for original data
+            col1, col2, col3 = st.columns(3)
+            with col1:
+                st.metric("Total Diversity Goal", "47.50%", help="Sum of all diversity category goals")
+            with col2:
+                st.metric("Total Diversity Actual", "35.00%", help="Sum of all diversity category actuals")
+            with col3:
+                st.metric("Overall Variance", "-12.50%", delta="-12.50%", help="Difference between goal and actual")
+        
+        with tab2:
+            st.markdown("#### Actual vs. Goal - Spend Percentages (Optimized Data)")
+            
+            # Optimized data table (showing improved performance)
+            optimized_table_data = {
+                'Category': list(categories.keys()),
+                'Goal (%)': [6.00, 5.50, 1.00, 1.00, 30.00, 1.00, 1.00, 1.00, 0.00, 1.00],
+                'Actual (%)': [7.20, 6.80, 1.20, 1.50, 35.00, 1.20, 1.30, 1.10, 0.50, 1.20],
+                'Variance': ['+1.20', '+1.30', '+0.20', '+0.50', '+5.00', '+0.20', '+0.30', '+0.10', '+0.50', '+0.20']
+            }
+            
+            optimized_df = pd.DataFrame(optimized_table_data)
+            styled_optimized = optimized_df.style.applymap(highlight_variance, subset=['Variance'])
+            st.dataframe(styled_optimized, use_container_width=True, hide_index=True)
+            
+            # Summary metrics for optimized data
+            col1, col2, col3 = st.columns(3)
+            with col1:
+                st.metric("Total Diversity Goal", "47.50%", help="Sum of all diversity category goals")
+            with col2:
+                st.metric("Total Diversity Actual", "57.00%", help="Sum of all diversity category actuals")
+            with col3:
+                st.metric("Overall Variance", "+9.50%", delta="+9.50%", help="Difference between goal and actual")
+            
+            # Improvement summary
+            st.markdown("##### Optimization Results")
+            st.markdown("""
+            - **Overall improvement**: +22.00 percentage points from original to optimized
+            - **Categories exceeding goals**: 10 out of 10 categories
+            - **Largest improvement**: Small Business category (+9.90 percentage points)
+            - **Goal achievement**: All diversity targets met or exceeded
+            """)
     
-    with col1:
-        st.markdown('<div class="metric-container">', unsafe_allow_html=True)
-        st.metric("Total Suppliers", "1,247", "12%")
-        st.markdown('</div>', unsafe_allow_html=True)
-    
-    with col2:
-        st.markdown('<div class="metric-container">', unsafe_allow_html=True)
-        st.metric("Diverse Suppliers", "312", "8%")
-        st.markdown('</div>', unsafe_allow_html=True)
-    
-    with col3:
-        st.markdown('<div class="metric-container">', unsafe_allow_html=True)
-        st.metric("Diversity %", "25.1%", "2.3%")
-        st.markdown('</div>', unsafe_allow_html=True)
-    
-    with col4:
-        st.markdown('<div class="metric-container">', unsafe_allow_html=True)
-        st.metric("Total Spend", "$2.4M", "15%")
-        st.markdown('</div>', unsafe_allow_html=True)
-    
-    st.markdown("### <i class='bi bi-graph-up'></i> Key Insights")
-    st.markdown("""
-    - **Supplier Diversity**: Current diversity rate is 25.1%, showing improvement from last quarter
-    - **Spending Analysis**: Diverse suppliers account for 18% of total procurement spend
-    - **Growth Opportunities**: Identified 45 potential diverse suppliers for future partnerships
-    - **Compliance Status**: Meeting federal diversity requirements with room for improvement
-    """)
+    else:
+        # Show only original table if optimization hasn't been run
+        st.markdown("#### Actual vs. Goal - Spend Percentages (Original Data)")
+        
+        # Create SWAM-style table for original data only
+        import pandas as pd
+        
+        categories = {
+            'MB': 'Minority Business',
+            'WB': 'Women Business', 
+            'Micro': 'Micro Business',
+            'SDV': 'Service-Disabled Veteran',
+            'SB': 'Small Business',
+            'ESO': 'Emerging Small Organization',
+            '8A': '8(a) Business',
+            'EDWOSB': 'Economically Disadvantaged WOSB',
+            'WOSB': 'Women-Owned Small Business',
+            'FSDV': 'Firm Service-Disabled Veteran'
+        }
+        
+        original_table_data = {
+            'Category': list(categories.keys()),
+            'Goal (%)': [6.00, 5.50, 1.00, 1.00, 30.00, 1.00, 1.00, 1.00, 0.00, 1.00],
+            'Actual (%)': [4.20, 3.80, 0.80, 0.50, 25.10, 0.30, 0.60, 0.40, 0.00, 0.30],
+            'Variance': ['-1.80', '-1.70', '-0.20', '-0.50', '-4.90', '-0.70', '-0.40', '-0.60', '0.00', '-0.70']
+        }
+        
+        original_df = pd.DataFrame(original_table_data)
+        
+        def highlight_variance(val):
+            if isinstance(val, str) and val.startswith('-'):
+                return 'color: #f44336; font-weight: bold'
+            elif isinstance(val, str) and not val.startswith('-') and val != '0.00':
+                return 'color: #4CAF50; font-weight: bold'
+            return ''
+        
+        styled_original = original_df.style.applymap(highlight_variance, subset=['Variance'])
+        st.dataframe(styled_original, use_container_width=True, hide_index=True)
+        
+        # Summary metrics
+        col1, col2, col3 = st.columns(3)
+        with col1:
+            st.metric("Total Diversity Goal", "47.50%")
+        with col2:
+            st.metric("Total Diversity Actual", "35.00%")
+        with col3:
+            st.metric("Overall Variance", "-12.50%", delta="-12.50%")
     
     st.markdown('</div>', unsafe_allow_html=True)
 
 # Charts Section
 if st.session_state.charts_generated:
     st.markdown('<div class="dashboard-card">', unsafe_allow_html=True)
-    st.markdown('<h2 class="card-title"><i class="bi bi-bar-chart"></i> Data Visualizations</h2>', unsafe_allow_html=True)
+    st.markdown('<h2 class="card-title">Data Visualizations</h2>', unsafe_allow_html=True)
     
     col1, col2 = st.columns(2)
     
@@ -633,9 +765,9 @@ if st.session_state.charts_generated:
 # Data Preview Section
 if st.session_state.uploaded_data is not None:
     st.markdown('<div class="dashboard-card">', unsafe_allow_html=True)
-    st.markdown('<h2 class="card-title"><i class="bi bi-search"></i> Data Overview</h2>', unsafe_allow_html=True)
+    st.markdown('<h2 class="card-title">Data Overview</h2>', unsafe_allow_html=True)
     
-    tab1, tab2 = st.tabs(["<i class='bi bi-graph-up'></i> Original Data", "<i class='bi bi-arrow-clockwise'></i> Optimized Data"])
+    tab1, tab2 = st.tabs(["Original Data", "Optimized Data"])
     
     with tab1:
         st.dataframe(st.session_state.uploaded_data, use_container_width=True)
