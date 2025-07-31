@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """
-Run script for the Multi-Page Supplier Diversity Dashboard
+Run script for the Small Business PO Percentage Dashboard
+Updated to use the FrontEnd-Overhaul-1.1 version
 """
 
 import subprocess
@@ -16,19 +17,19 @@ def main():
     # Change to frontend directory
     os.chdir(frontend_dir)
     
-    # Run the main dashboard (multi-page app)
+    # Run the main dashboard (cleaned up frontend)
     app_path = frontend_dir / "main_dashboard.py"
     
-    print("📊 Starting Multi-Page Supplier Diversity Dashboard...")
+    print("📊 Starting Small Business PO Percentage Dashboard...")
     print(f"📁 Frontend directory: {frontend_dir}")
     print(f"📄 Main app file: {app_path}")
     print("🌐 The dashboard will open in your browser automatically")
-    print("📋 Available pages:")
-    print("   • Main Dashboard - Project overview and key metrics")
-    print("   • Detailed Analysis - Deep dive into supplier matching")
-    print("   • Implementation Guide - Step-by-step action plan")
-    print("   • Data Sources - Technical methodology and architecture")
-    print("🎯 Target: 25% of POs should go to small businesses")
+    print("📋 Features:")
+    print("   • Interactive PO percentage analysis")
+    print("   • Real-time progress tracking toward 25% target")
+    print("   • Supplier transition recommendations")
+    print("   • Implementation roadmap and quick wins")
+    print("🎯 Current: 16.3% → Target: 25% of POs to small businesses")
     print("⏹️  Press Ctrl+C to stop the server")
     print("-" * 60)
     
