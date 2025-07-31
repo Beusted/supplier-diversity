@@ -57,6 +57,16 @@ theme = get_theme_colors()
 # CSS with properly escaped braces
 st.markdown("""
 <style>
+    :root {
+        --poly-green: #154734;
+        --poly-green-dark: #0f3325;
+        --poly-green-light: #1a5a3f;
+        --mustard-gold: #ffc72c;
+        --mustard-gold-light: #ffd54f;
+        --white: #ffffff;
+        --dark-gray: #333333;
+    }
+    
     .main {
         background: """ + theme['bg_primary'] + """ !important;
         font-family: 'Inter', sans-serif;
@@ -77,66 +87,109 @@ st.markdown("""
         background: """ + theme['body_bg'] + """ !important;
     }
     
-    /* Navigation Bar - positioned at very top */
-    .nav-bar {
+    /* Topbar styling */
+    .topbar {
         position: fixed;
         top: 0;
         left: 0;
         right: 0;
-        z-index: 1000;
+        z-index: 999999;
         background: """ + theme['nav_bg'] + """;
-        backdrop-filter: blur(10px);
-        border-bottom: 1px solid rgba(196, 146, 20, 0.3);
-        padding: 0.75rem 2rem;
+        backdrop-filter: blur(15px);
+        border-bottom: 3px solid var(--mustard-gold);
+        height: 70px;
         display: flex;
-        justify-content: space-between;
         align-items: center;
-        height: 60px;
-        box-sizing: border-box;
+        justify-content: space-between;
+        padding: 0 2rem;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.15);
     }
     
-    .nav-logo {
-        font-size: 1.5rem;
+    .topbar-title {
+        font-size: 1.8rem;
         font-weight: 700;
         color: var(--mustard-gold);
         display: flex;
         align-items: center;
         gap: 0.5rem;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
     
-    .nav-buttons {
+    .topbar-buttons {
         display: flex;
-        gap: 0.75rem;
+        gap: 1rem;
+        align-items: center;
     }
     
-    .nav-btn {
+    .topbar-btn {
         background: var(--mustard-gold);
         color: var(--poly-green-dark);
-        border: none;
-        padding: 0.4rem 0.8rem;
-        border-radius: 6px;
-        font-weight: 500;
+        border: 2px solid var(--mustard-gold);
+        padding: 0.6rem 1.2rem;
+        border-radius: 8px;
+        font-weight: 700;
+        font-size: 0.9rem;
         cursor: pointer;
         transition: all 0.3s ease;
-        display: flex;
-        align-items: center;
-        gap: 0.4rem;
-        font-size: 0.9rem;
+        box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+        font-family: 'Inter', sans-serif;
+        height: 45px;
+        white-space: nowrap;
+        text-decoration: none;
+        display: inline-block;
     }
     
-    .nav-btn:hover {
-        background: var(--mustard-gold-light);
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(196, 146, 20, 0.3);
-    }
-    
-    .nav-btn.active {
+    .topbar-btn:hover {
         background: var(--poly-green);
         color: var(--mustard-gold);
+        border-color: var(--poly-green);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(21, 71, 52, 0.4);
+    }
+    
+    /* Position navigation buttons in topbar */
+    .topbar-nav-buttons {
+        position: fixed;
+        top: 12px;
+        right: 2rem;
+        z-index: 1000000;
+        display: flex;
+        gap: 1rem;
+        width: auto;
+    }
+    
+    .topbar-nav-buttons .stColumns {
+        width: auto !important;
+        gap: 1rem !important;
+    }
+    
+    .topbar-nav-buttons button {
+        background: var(--mustard-gold) !important;
+        color: var(--poly-green-dark) !important;
+        border: 2px solid var(--mustard-gold) !important;
+        padding: 0.6rem 1.2rem !important;
+        border-radius: 8px !important;
+        font-weight: 700 !important;
+        font-size: 0.9rem !important;
+        cursor: pointer !important;
+        transition: all 0.3s ease !important;
+        box-shadow: 0 3px 8px rgba(0,0,0,0.15) !important;
+        font-family: 'Inter', sans-serif !important;
+        height: 45px !important;
+        white-space: nowrap !important;
+        min-width: 120px !important;
+    }
+    
+    .topbar-nav-buttons button:hover {
+        background: var(--poly-green) !important;
+        color: var(--mustard-gold) !important;
+        border-color: var(--poly-green) !important;
+        transform: translateY(-2px) !important;
+        box-shadow: 0 6px 20px rgba(21, 71, 52, 0.4) !important;
     }
     
     .block-container {
-        padding-top: 80px !important;
+        padding-top: 90px !important;
         padding-bottom: 2rem !important;
         background: transparent !important;
         margin-top: 0 !important;
@@ -273,165 +326,47 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# Integrated Sticky Navigation Bar with buttons inside
+
+# Create topbar with title
 st.markdown(f"""
-<div class="integrated-nav-bar">
-    <div class="nav-logo">
+<div class="topbar">
+    <div class="topbar-title">
         <i class="bi bi-building"></i>
-        PO Diversity
-    </div>
-    <div class="nav-buttons-integrated">
-        <button class="nav-btn-integrated {'active' if st.session_state.current_page == 'dashboard' else ''}" onclick="document.getElementById('integrated-dashboard-btn').click()">
-            <i class="bi bi-speedometer2"></i>
-            Dashboard
-        </button>
-        <button class="nav-btn-integrated" onclick="document.getElementById('integrated-settings-btn').click()">
-            <i class="bi bi-gear"></i>
-            Settings
-        </button>
-        <button class="nav-btn-integrated {'active' if st.session_state.current_page == 'about' else ''}" onclick="document.getElementById('integrated-about-btn').click()">
-            <i class="bi bi-info-circle"></i>
-            About
-        </button>
+        PO Diversity Dashboard
     </div>
 </div>
-
-<style>
-    /* Integrated sticky navigation bar */
-    .integrated-nav-bar {{
-        position: fixed !important;
-        top: 0 !important;
-        left: 0 !important;
-        right: 0 !important;
-        z-index: 9999 !important;
-        background: {theme['nav_bg']} !important;
-        backdrop-filter: blur(10px) !important;
-        border-bottom: 1px solid rgba(196, 146, 20, 0.3) !important;
-        padding: 0.75rem 2rem !important;
-        height: 60px !important;
-        box-sizing: border-box !important;
-        display: flex !important;
-        justify-content: space-between !important;
-        align-items: center !important;
-    }}
-    
-    .nav-logo {{
-        font-size: 1.5rem !important;
-        font-weight: 700 !important;
-        color: var(--mustard-gold) !important;
-        display: flex !important;
-        align-items: center !important;
-        gap: 0.5rem !important;
-    }}
-    
-    .nav-buttons-integrated {{
-        display: flex !important;
-        gap: 0.5rem !important;
-        align-items: center !important;
-    }}
-    
-    .nav-btn-integrated {{
-        background: var(--mustard-gold) !important;
-        color: var(--poly-green-dark) !important;
-        border: none !important;
-        padding: 0.4rem 0.8rem !important;
-        border-radius: 6px !important;
-        font-weight: 500 !important;
-        font-size: 0.9rem !important;
-        cursor: pointer !important;
-        transition: all 0.3s ease !important;
-        display: flex !important;
-        align-items: center !important;
-        gap: 0.4rem !important;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
-        font-family: 'Inter', sans-serif !important;
-    }}
-    
-    .nav-btn-integrated:hover {{
-        background: var(--mustard-gold-light) !important;
-        transform: translateY(-2px) !important;
-        box-shadow: 0 4px 12px rgba(196, 146, 20, 0.3) !important;
-    }}
-    
-    .nav-btn-integrated.active {{
-        background: var(--poly-green) !important;
-        color: var(--mustard-gold) !important;
-        box-shadow: 0 2px 8px rgba(21, 71, 52, 0.3) !important;
-    }}
-    
-    /* Ensure main content doesn't overlap */
-    .main .block-container {{
-        padding-top: 80px !important;
-        margin-top: 0 !important;
-    }}
-    
-    /* Hide the separate navigation elements */
-    .nav-header,
-    .nav-buttons-container {{
-        display: none !important;
-    }}
-</style>
 """, unsafe_allow_html=True)
 
-# Hidden functional buttons that get triggered by the integrated nav
-st.markdown('<div style="display: none; position: absolute; top: -9999px;">', unsafe_allow_html=True)
+# Navigation buttons positioned in topbar using CSS
+st.markdown("""
+<div class="topbar-nav-buttons">
+""", unsafe_allow_html=True)
 
-hidden_col1, hidden_col2, hidden_col3 = st.columns([1, 1, 1])
-
-with hidden_col1:
-    if st.button("Dashboard", key="integrated-dashboard-btn"):
+col1, col2, col3 = st.columns([1, 1, 1])
+with col1:
+    if st.button("📊 Dashboard", key="nav-dashboard", use_container_width=True):
         st.session_state.current_page = 'dashboard'
+        st.session_state.show_settings = False
         st.rerun()
-
-with hidden_col2:
-    if st.button("Settings", key="integrated-settings-btn"):
+with col2:
+    if st.button("⚙️ Settings", key="nav-settings", use_container_width=True):
         st.session_state.show_settings = not st.session_state.show_settings
         st.rerun()
-
-with hidden_col3:
-    if st.button("About", key="integrated-about-btn"):
+with col3:
+    if st.button("ℹ️ About", key="nav-about", use_container_width=True):
         st.session_state.current_page = 'about'
+        st.session_state.show_settings = False
         st.rerun()
 
-st.markdown('</div>', unsafe_allow_html=True)
+st.markdown("</div>", unsafe_allow_html=True)
 
-# Clean up and ensure integrated navigation works
-st.markdown("""
+# Custom CSS for overall styling
+st.markdown(f"""
 <style>
-    /* Hide any old navigation elements */
-    .nav-header,
-    .nav-buttons-container,
-    .nav-buttons-container ~ .stColumns {
-        display: none !important;
-    }
-    
-    /* Ensure integrated navigation stays above all content */
-    .integrated-nav-bar {
-        position: fixed !important;
-        top: 0 !important;
-        z-index: 9999 !important;
-    }
-    
-    /* Prevent content from jumping behind nav */
-    .main {
-        padding-top: 0 !important;
-        margin-top: 0 !important;
-    }
-    
-    /* Force the app container to account for fixed nav */
-    .stApp {
-        padding-top: 0 !important;
-    }
-    
-    /* Hide the hidden functional buttons completely */
-    .integrated-nav-bar ~ div[style*="display: none"] {
-        display: none !important;
-        visibility: hidden !important;
-        height: 0 !important;
-        overflow: hidden !important;
-        position: absolute !important;
-        top: -9999px !important;
-    }
+    /* General app styling improvements */
+    .stApp {{
+        background: {theme['body_bg']} !important;
+    }}
 </style>
 """, unsafe_allow_html=True)
 
