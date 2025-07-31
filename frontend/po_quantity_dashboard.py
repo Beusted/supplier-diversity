@@ -112,6 +112,11 @@ st.markdown("""
         text-align: center;
         margin: 0.5rem 0;
     }
+            
+	[data-testid="stDecoration"] {
+		display: none;
+	}
+            
 </style>
 """, unsafe_allow_html=True)
 

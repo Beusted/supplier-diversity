@@ -17,7 +17,7 @@ def main():
     os.chdir(frontend_dir)
     
     # Run the PO quantity focused dashboard
-    app_path = frontend_dir / "po_quantity_dashboard.py"
+    app_path = "po_quantity_dashboard.py"
     
     print("📋 Starting Small Business PO Percentage Dashboard...")
     print(f"📁 Frontend directory: {frontend_dir}")
