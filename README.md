@@ -4,19 +4,19 @@ A comprehensive web application for analyzing and visualizing supplier diversity
 
 ## Features
 
-### 🎯 Core Functionality
+### Core Functionality
 - **Data Upload**: Upload Excel spreadsheets containing procurement data
 - **Report Generation**: Generate comprehensive diversity reports with key metrics
 - **Data Visualization**: Create pie charts and comparison charts for original and optimized data
 - **Data Optimization**: Backend integration for data optimization (placeholder functionality)
 
-### 🎨 User Interface
-- **Top Navigation Bar**: Clean navigation with Home, Dashboard, Reports, and Settings
+### User Interface
+- **Top Navigation Bar**: Clean navigation with Home, Dashboard, and Reports
 - **Responsive Design**: Optimized for desktop and mobile viewing
 - **Cal Poly Branding**: Consistent use of Cal Poly green (#154734) and gold (#ffc72c)
 - **Modern Styling**: Glass-morphism effects and smooth animations
 
-### 🤖 Interactive Features
+### Interactive Features
 - **Sticky Chatbot**: AI assistant positioned at bottom-right corner
 - **Real-time Updates**: Dynamic content updates based on user actions
 - **Data Preview**: Interactive data tables with original and optimized views
@@ -76,7 +76,7 @@ A comprehensive web application for analyzing and visualizing supplier diversity
 - View improvement metrics in the comparison charts
 
 ### 5. Use the Chatbot
-- Click the chat icon (💬) in the bottom-right corner
+- Click the chat icon (?) in the bottom-right corner
 - Ask questions about your data, reports, or how to use the application
 - Get real-time assistance with procurement diversity analysis
 
@@ -145,4 +145,4 @@ For questions, issues, or feature requests, please contact the development team 
 
 ---
 
-**Built with ❤️ using Streamlit and Cal Poly pride** 🐎
+**Built with love using Streamlit and Cal Poly pride**

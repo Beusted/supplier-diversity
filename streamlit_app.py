@@ -9,7 +9,7 @@ import base64
 # Page configuration
 st.set_page_config(
     page_title="Diversity in Procurement Dashboard",
-    page_icon="📊",
+    page_icon=":)",
     layout="wide",
     initial_sidebar_state="collapsed"
 )
@@ -302,11 +302,11 @@ if 'optimized_data' not in st.session_state:
 # Top Navigation Bar
 st.markdown("""
 <div class="top-nav">
-    <div class="nav-logo">🏢 Diversity in Procurement</div>
+    <div class="nav-logo">:) Diversity in Procurement</div>
     <div class="nav-buttons">
-        <a href="#home" class="nav-btn">🏠 Home</a>
-        <a href="#dashboard" class="nav-btn">📊 Dashboard</a>
-        <a href="#reports" class="nav-btn">📋 Reports</a>
+        <a href="#home" class="nav-btn">^ Home</a>
+        <a href="#dashboard" class="nav-btn">+ Dashboard</a>
+        <a href="#reports" class="nav-btn">= Reports</a>
     </div>
 </div>
 """, unsafe_allow_html=True)
@@ -319,7 +319,7 @@ st.markdown('<h1 class="dashboard-title">Diversity in Procurement Dashboard</h1>
 
 # Upload Section
 st.markdown('<div class="dashboard-card">', unsafe_allow_html=True)
-st.markdown('<h2 class="card-title">📁 Data Upload</h2>', unsafe_allow_html=True)
+st.markdown('<h2 class="card-title">[] Data Upload</h2>', unsafe_allow_html=True)
 
 col1, col2, col3 = st.columns([1, 2, 1])
 with col2:
@@ -338,14 +338,14 @@ with col2:
             # Read the uploaded file
             df = pd.read_excel(uploaded_file)
             st.session_state.uploaded_data = df
-            st.success(f"✅ Successfully uploaded file with {len(df)} rows and {len(df.columns)} columns!")
+            st.success(f":) Successfully uploaded file with {len(df)} rows and {len(df.columns)} columns!")
             
             # Show preview of data
-            with st.expander("📋 Preview Data"):
+            with st.expander("[] Preview Data"):
                 st.dataframe(df.head(10), use_container_width=True)
                 
         except Exception as e:
-            st.error(f"❌ Error reading file: {str(e)}")
+            st.error(f":( Error reading file: {str(e)}")
     
     st.markdown('</div>', unsafe_allow_html=True)
 
@@ -354,44 +354,44 @@ st.markdown('</div>', unsafe_allow_html=True)
 # Action Buttons Section
 if st.session_state.uploaded_data is not None:
     st.markdown('<div class="dashboard-card">', unsafe_allow_html=True)
-    st.markdown('<h2 class="card-title">🚀 Actions</h2>', unsafe_allow_html=True)
+    st.markdown('<h2 class="card-title">* Actions</h2>', unsafe_allow_html=True)
     
     col1, col2, col3 = st.columns(3)
     
     with col1:
-        if st.button("📊 Generate Report", use_container_width=True):
+        if st.button("+ Generate Report", use_container_width=True):
             with st.spinner("Generating report..."):
                 # Simulate report generation
                 import time
                 time.sleep(2)
                 st.session_state.report_generated = True
-                st.success("✅ Report generated successfully!")
+                st.success(":) Report generated successfully!")
     
     with col2:
-        if st.button("📈 Generate Charts", use_container_width=True):
+        if st.button("^ Generate Charts", use_container_width=True):
             with st.spinner("Creating visualizations..."):
                 # Simulate chart generation
                 import time
                 time.sleep(1.5)
                 st.session_state.charts_generated = True
-                st.success("✅ Charts generated successfully!")
+                st.success(":) Charts generated successfully!")
     
     with col3:
-        if st.button("🔄 Optimize Data", use_container_width=True):
+        if st.button("~ Optimize Data", use_container_width=True):
             with st.spinner("Optimizing data..."):
                 # Simulate data optimization
                 import time
                 time.sleep(2)
                 # Create mock optimized data
                 st.session_state.optimized_data = st.session_state.uploaded_data.copy()
-                st.success("✅ Data optimized successfully!")
+                st.success(":) Data optimized successfully!")
     
     st.markdown('</div>', unsafe_allow_html=True)
 
 # Report Section
 if st.session_state.report_generated:
     st.markdown('<div class="dashboard-card">', unsafe_allow_html=True)
-    st.markdown('<h2 class="card-title">📋 Generated Report</h2>', unsafe_allow_html=True)
+    st.markdown('<h2 class="card-title">= Generated Report</h2>', unsafe_allow_html=True)
     
     # Mock report content
     col1, col2, col3, col4 = st.columns(4)
@@ -416,7 +416,7 @@ if st.session_state.report_generated:
         st.metric("Total Spend", "$2.4M", "15%")
         st.markdown('</div>', unsafe_allow_html=True)
     
-    st.markdown("### 📊 Key Insights")
+    st.markdown("### + Key Insights")
     st.markdown("""
     - **Supplier Diversity**: Current diversity rate is 25.1%, showing improvement from last quarter
     - **Spending Analysis**: Diverse suppliers account for 18% of total procurement spend
@@ -429,7 +429,7 @@ if st.session_state.report_generated:
 # Charts Section
 if st.session_state.charts_generated:
     st.markdown('<div class="dashboard-card">', unsafe_allow_html=True)
-    st.markdown('<h2 class="card-title">📈 Data Visualizations</h2>', unsafe_allow_html=True)
+    st.markdown('<h2 class="card-title">^ Data Visualizations</h2>', unsafe_allow_html=True)
     
     col1, col2 = st.columns(2)
     
@@ -518,9 +518,9 @@ if st.session_state.charts_generated:
 # Data Preview Section
 if st.session_state.uploaded_data is not None:
     st.markdown('<div class="dashboard-card">', unsafe_allow_html=True)
-    st.markdown('<h2 class="card-title">🔍 Data Overview</h2>', unsafe_allow_html=True)
+    st.markdown('<h2 class="card-title">? Data Overview</h2>', unsafe_allow_html=True)
     
-    tab1, tab2 = st.tabs(["📊 Original Data", "🔄 Optimized Data"])
+    tab1, tab2 = st.tabs(["+ Original Data", "~ Optimized Data"])
     
     with tab1:
         st.dataframe(st.session_state.uploaded_data, use_container_width=True)
@@ -539,13 +539,13 @@ st.markdown('</div>', unsafe_allow_html=True)
 st.markdown("""
 <div class="chatbot-container">
     <button class="chatbot-toggle" onclick="toggleChatbot()" title="Chat Assistant">
-        💬
+        ?
     </button>
 </div>
 
 <div class="chatbot-window" id="chatbot-window">
     <div class="chatbot-header">
-        <span>🤖 Procurement Assistant</span>
+        <span>:) Procurement Assistant</span>
         <button onclick="toggleChatbot()" style="background: none; border: none; color: #154734; font-size: 20px; cursor: pointer;">&times;</button>
     </div>
     <div class="chatbot-messages" id="chatbot-messages">
