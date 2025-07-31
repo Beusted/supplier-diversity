@@ -1,25 +1,29 @@
 import pandas as pd
+import matplotlib.pyplot as plt
 
-def categorize_supplier(supplier_type):
-    """Categorizes a supplier as 'Small Business' or 'Big Business'."""
-    small_business_types = ['OSB', 'SB', 'MB', 'DVB', 'DVBE']
-    if supplier_type in small_business_types:
-        return 'Small Business'
-    else:
+def categorize_supplier(vlookup2_value):
+    """Categorizes a supplier as 'Small Business' or 'Big Business' based on vlookup2 column."""
+    if pd.isna(vlookup2_value):
         return 'Big Business'
+    
+    vlookup2_str = str(vlookup2_value).upper()
+    small_business_indicators = ['SB', 'MB', 'DVBE', 'DVB']
+    
+    for indicator in small_business_indicators:
+        if indicator in vlookup2_str:
+            return 'Small Business'
+    
+    return 'Big Business'
 
 def analyze_supplier_diversity(file_path):
     """
-    Analyzes supplier diversity from a CSV file to find products bought from
-    both small and big businesses.
+    Analyzes supplier diversity from a CSV file to categorize suppliers.
 
     Args:
         file_path (str): The path to the CSV file.
 
     Returns:
-        dict: A dictionary where keys are product descriptions and values are
-              lists of tuples, with each tuple containing the supplier name,
-              original supplier type, and the business category.
+        tuple: (small_business_count, big_business_count, total_suppliers)
     """
     try:
         df = pd.read_csv(file_path, encoding='utf-8')
@@ -29,43 +33,66 @@ def analyze_supplier_diversity(file_path):
     # Clean column names
     df.columns = df.columns.str.strip()
 
-    # Handle NaN values in 'Supplier Type' by filling them with a placeholder
-    df['Supplier Type'] = df['Supplier Type'].fillna('Unlabeled')
+    # Add a 'Business Category' column based on Vlookup2
+    df['Business Category'] = df['Vlookup2'].apply(categorize_supplier)
 
+    # Get unique suppliers and their categories
+    unique_suppliers = df[['Supplier Name', 'Vlookup2', 'Business Category']].drop_duplicates()
+    
+    small_business_count = len(unique_suppliers[unique_suppliers['Business Category'] == 'Small Business'])
+    big_business_count = len(unique_suppliers[unique_suppliers['Business Category'] == 'Big Business'])
+    total_suppliers = len(unique_suppliers)
 
-    # Add a 'Business Category' column
-    df['Business Category'] = df['Supplier Type'].apply(categorize_supplier)
-
-    # Group by product and find products with both 'Small Business' and 'Big Business'
-    product_groups = df.groupby('Line Descr')['Business Category'].nunique()
-    products_with_overlap = product_groups[product_groups > 1].index
-
-    # Filter the DataFrame to get only the overlapping products
-    result_df = df[df['Line Descr'].isin(products_with_overlap)]
-
-    # Create a dictionary to store the results
-    overlap_data = {}
-    for product in products_with_overlap:
-        # Get the suppliers for the current product
-        product_suppliers_df = result_df[result_df['Line Descr'] == product]
-        
-        # Check if this product is sourced from both Small and Big businesses
-        categories = product_suppliers_df['Business Category'].unique()
-        if 'Small Business' in categories and 'Big Business' in categories:
-            suppliers = product_suppliers_df[['Supplier Name', 'Supplier Type', 'Business Category']].drop_duplicates().to_records(index=False)
-            overlap_data[product] = list(suppliers)
-
-    return overlap_data
+    return small_business_count, big_business_count, total_suppliers, unique_suppliers
 
 if __name__ == "__main__":
     file_path = "/Users/ngobrian/Downloads/csu fullerton/SLO AI Summer Camp/supplier-diversity/SLO CFS Spend Data 2024.csv"
-    overlapped_products = analyze_supplier_diversity(file_path)
+    small_count, big_count, total, suppliers_df = analyze_supplier_diversity(file_path)
 
-    if overlapped_products:
-        print("Products bought from both Small and Big Businesses:")
-        for product, suppliers in overlapped_products.items():
-            print(f"\nProduct: {product}")
-            for supplier_name, supplier_type, business_category in suppliers:
-                print(f"  - Supplier: {supplier_name}, Type: {supplier_type} ({business_category})")
-    else:
-        print("No products found to be purchased from both Small and Big Businesses.")
+    print(f"Supplier Diversity Analysis:")
+    print(f"Total Suppliers: {total}")
+    print(f"Small Businesses: {small_count} ({small_count/total*100:.1f}%)")
+    print(f"Big Businesses: {big_count} ({big_count/total*100:.1f}%)")
+    
+    print(f"\nSmall Business Suppliers:")
+    small_businesses = suppliers_df[suppliers_df['Business Category'] == 'Small Business']
+    for _, row in small_businesses.iterrows():
+        print(f"  - {row['Supplier Name']} (Vlookup2: {row['Vlookup2']})")
+        
+    print(f"\nBig Business Suppliers:")
+    big_businesses = suppliers_df[suppliers_df['Business Category'] == 'Big Business']
+    for _, row in big_businesses.iterrows():
+        print(f"  - {row['Supplier Name']} (Vlookup2: {row['Vlookup2']})")
+    
+    # Create figure with subplots
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(16, 8))
+    
+    # Pie chart
+    labels = ['Small Business', 'Big Business']
+    sizes = [small_count, big_count]
+    colors = ['#4CAF50', '#FF5722']
+    explode = (0.1, 0)  # explode small business slice
+    
+    ax1.pie(sizes, explode=explode, labels=labels, colors=colors, autopct='%1.1f%%',
+            shadow=False, startangle=90)
+    ax1.set_title('Supplier Diversity Distribution', fontsize=14, fontweight='bold')
+    
+    # Bar chart
+    ax2.bar(labels, sizes, color=colors)
+    ax2.set_title('Supplier Count Comparison', fontsize=14, fontweight='bold')
+    ax2.set_ylabel('Number of Suppliers')
+    ax2.set_ylim(0, max(sizes) * 1.1)
+    
+    # Add value labels on bars
+    for i, v in enumerate(sizes):
+        ax2.text(i, v + max(sizes) * 0.02, str(v), ha='center', va='bottom', fontweight='bold')
+    
+    # Overall title
+    fig.suptitle('Supplier Diversity Analysis\nSmall Business vs Big Business', fontsize=16, fontweight='bold')
+    
+    # Save the plot
+    plt.tight_layout()
+    plt.savefig('supplier_diversity_analysis.png', dpi=300, bbox_inches='tight')
+    plt.close()
+    
+    print(f"\nVisualization saved as 'supplier_diversity_analysis.png'")
