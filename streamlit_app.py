@@ -23,8 +23,21 @@ st.markdown("""
     
     /* Main app styling */
     .main {
-        background: linear-gradient(135deg, #154734 0%, #1a5a3e 100%);
+        background: linear-gradient(135deg, #154734 0%, #1a5a3e 100%) !important;
         font-family: 'Inter', sans-serif;
+    }
+    
+    /* Remove any default Streamlit containers */
+    .block-container {
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+        background: transparent !important;
+    }
+    
+    /* Ensure main content area has no background */
+    .main .block-container {
+        background: transparent !important;
+        max-width: none !important;
     }
     
     /* Hide Streamlit branding */
@@ -37,7 +50,7 @@ st.markdown("""
         background: rgba(21, 71, 52, 0.95);
         backdrop-filter: blur(10px);
         border-bottom: 2px solid #ffc72c;
-        padding: 1rem 2rem;
+        padding: 0.75rem 2rem;
         position: fixed;
         top: 0;
         left: 0;
@@ -84,18 +97,18 @@ st.markdown("""
     
     /* Main content area */
     .main-content {
-        margin-top: 100px;
-        padding: 2rem;
-        min-height: calc(100vh - 100px);
+        margin-top: 70px;
+        padding: 1rem 2rem;
+        min-height: calc(100vh - 70px);
     }
     
     /* Dashboard title */
     .dashboard-title {
         text-align: center;
         color: #ffc72c;
-        font-size: 48px;
+        font-size: 36px;
         font-weight: 700;
-        margin-bottom: 2rem;
+        margin-bottom: 1rem;
         text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
     }
     
@@ -105,26 +118,36 @@ st.markdown("""
         backdrop-filter: blur(10px);
         border: 1px solid rgba(255, 199, 44, 0.2);
         border-radius: 12px;
-        padding: 2rem;
-        margin: 1rem 0;
+        padding: 1.5rem;
+        margin: 0.5rem 0;
         box-shadow: 0 8px 32px rgba(0,0,0,0.1);
     }
     
     .card-title {
         color: #ffc72c;
-        font-size: 24px;
+        font-size: 22px;
         font-weight: 600;
-        margin-bottom: 1rem;
+        margin-bottom: 0.75rem;
     }
     
     /* Upload section */
     .upload-section {
         text-align: center;
-        padding: 3rem;
+        padding: 1rem;
         border: 2px dashed #ffc72c;
         border-radius: 12px;
         background: rgba(255, 199, 44, 0.05);
-        margin: 2rem 0;
+        margin: 0.5rem 0;
+    }
+    
+    .upload-section h4 {
+        color: #ffc72c !important;
+        margin-bottom: 0.5rem !important;
+    }
+    
+    .upload-section p {
+        color: #f8f9fa !important;
+        margin-bottom: 0 !important;
     }
     
     /* Button styling */
@@ -181,9 +204,46 @@ st.markdown("""
     
     /* File uploader styling */
     .stFileUploader > div > div {
-        background: rgba(255, 255, 255, 0.1) !important;
+        background: transparent !important;
+        border: none !important;
+        border-radius: 0 !important;
+        padding: 0 !important;
+    }
+    
+    .stFileUploader > div > div > div {
+        background: transparent !important;
         border: 2px dashed #ffc72c !important;
         border-radius: 12px !important;
+        padding: 2rem !important;
+        text-align: center !important;
+        margin-top: -1rem !important;
+        min-height: 100px !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: center !important;
+        align-items: center !important;
+    }
+    
+    .stFileUploader > div > div > div > div {
+        color: #f8f9fa !important;
+    }
+    
+    .stFileUploader label {
+        display: none !important;
+    }
+    
+    .stFileUploader button {
+        background: #ffc72c !important;
+        color: #154734 !important;
+        border: none !important;
+        border-radius: 6px !important;
+        padding: 0.5rem 1rem !important;
+        font-weight: 500 !important;
+        margin-top: 0.5rem !important;
+    }
+    
+    .stFileUploader button:hover {
+        background: #e0b000 !important;
     }
     
     /* Success/Error messages */
@@ -294,8 +354,8 @@ st.markdown("""
     .chart-container {
         background: rgba(255, 255, 255, 0.05);
         border-radius: 12px;
-        padding: 1.5rem;
-        margin: 1rem 0;
+        padding: 1rem;
+        margin: 0.5rem 0;
         border: 1px solid rgba(255, 199, 44, 0.2);
     }
     
@@ -365,26 +425,29 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# Main content area
-st.markdown('<div class="main-content">', unsafe_allow_html=True)
-
-# Dashboard title
-st.markdown('<h1 class="dashboard-title">Diversity in Procurement Dashboard</h1>', unsafe_allow_html=True)
+# Main content area - remove the div wrapper that creates grey space
+# Dashboard title - positioned right below toolbar
+st.markdown('<h1 class="dashboard-title" style="margin-top: 80px; padding-top: 1rem;">Diversity in Procurement Dashboard</h1>', unsafe_allow_html=True)
 
 # Upload Section
-st.markdown('<div class="dashboard-card">', unsafe_allow_html=True)
+st.markdown('<div class="dashboard-card" style="margin-top: 1rem;">', unsafe_allow_html=True)
 st.markdown('<h2 class="card-title"><i class="bi bi-folder"></i> Data Upload</h2>', unsafe_allow_html=True)
 
 col1, col2, col3 = st.columns([1, 2, 1])
 with col2:
-    st.markdown('<div class="upload-section">', unsafe_allow_html=True)
-    st.markdown("### Upload Procurement Data")
-    st.markdown("Upload your Excel spreadsheet containing procurement data to get started.")
+    # Custom styled file uploader that integrates with the dashed rectangle
+    st.markdown("""
+    <div class="upload-section">
+        <h4 style="color: #ffc72c; margin-bottom: 0.5rem;">Upload Procurement Data</h4>
+        <p style="color: #f8f9fa; margin-bottom: 1rem;">Drag and drop your Excel file here or click to browse</p>
+    </div>
+    """, unsafe_allow_html=True)
     
     uploaded_file = st.file_uploader(
         "Choose an Excel file",
         type=['xlsx', 'xls'],
-        help="Upload your procurement data in Excel format"
+        help="Upload your procurement data in Excel format",
+        label_visibility="collapsed"
     )
     
     if uploaded_file is not None:
@@ -400,8 +463,6 @@ with col2:
                 
         except Exception as e:
             st.error(f"<i class='bi bi-x-circle'></i> Error reading file: {str(e)}", unsafe_allow_html=True)
-    
-    st.markdown('</div>', unsafe_allow_html=True)
 
 st.markdown('</div>', unsafe_allow_html=True)
 
@@ -586,8 +647,6 @@ if st.session_state.uploaded_data is not None:
             st.info("Click 'Optimize Data' to generate optimized dataset")
     
     st.markdown('</div>', unsafe_allow_html=True)
-
-st.markdown('</div>', unsafe_allow_html=True)
 
 # Chatbot Component (positioned outside main content)
 st.markdown("""
