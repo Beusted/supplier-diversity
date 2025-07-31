@@ -70,7 +70,9 @@ if __name__ == "__main__":
     # Pie chart
     labels = ['Small Business', 'Big Business']
     sizes = [small_count, big_count]
-    colors = ['#4CAF50', '#FF5722']
+    poly_green = "#154734"
+    mustang_gold = "#BD8B13"
+    colors = [poly_green, mustang_gold]
     explode = (0.1, 0)  # explode small business slice
     
     ax1.pie(sizes, explode=explode, labels=labels, colors=colors, autopct='%1.1f%%',
