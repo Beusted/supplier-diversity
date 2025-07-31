@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Run script for the PO Quantity Small Business Dashboard
+Run script for the Multi-Page Supplier Diversity Dashboard
 """
 
 import subprocess
@@ -16,24 +16,28 @@ def main():
     # Change to frontend directory
     os.chdir(frontend_dir)
     
-    # Run the PO quantity focused dashboard
-    app_path = frontend_dir / "po_quantity_dashboard.py"
+    # Run the main dashboard (multi-page app)
+    app_path = frontend_dir / "main_dashboard.py"
     
-    print("📋 Starting Small Business PO Percentage Dashboard...")
+    print("📊 Starting Multi-Page Supplier Diversity Dashboard...")
     print(f"📁 Frontend directory: {frontend_dir}")
-    print(f"📄 App file: {app_path}")
+    print(f"📄 Main app file: {app_path}")
     print("🌐 The dashboard will open in your browser automatically")
-    print("📊 Focus: Percentage of Purchase Orders (POs) going to small businesses")
+    print("📋 Available pages:")
+    print("   • Main Dashboard - Project overview and key metrics")
+    print("   • Detailed Analysis - Deep dive into supplier matching")
+    print("   • Implementation Guide - Step-by-step action plan")
+    print("   • Data Sources - Technical methodology and architecture")
     print("🎯 Target: 25% of POs should go to small businesses")
     print("⏹️  Press Ctrl+C to stop the server")
     print("-" * 60)
     
     try:
-        # Run streamlit
+        # Run streamlit with the main page
         subprocess.run([
             sys.executable, "-m", "streamlit", "run", 
             str(app_path),
-            "--server.port", "8503",  # Different port to avoid conflicts
+            "--server.port", "8503",
             "--server.address", "localhost"
         ], check=True)
     except KeyboardInterrupt:
