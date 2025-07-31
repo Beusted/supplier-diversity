@@ -14,8 +14,9 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# Custom CSS for Cal Poly styling
+# Custom CSS for Cal Poly styling with Bootstrap Icons
 st.markdown("""
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 <style>
     /* Import Google Fonts */
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
@@ -63,7 +64,7 @@ st.markdown("""
     
     .nav-btn {
         background: #ffc72c;
-        color: #154734;
+        color: #000000;
         border: none;
         padding: 0.5rem 1rem;
         border-radius: 6px;
@@ -78,6 +79,7 @@ st.markdown("""
         background: #e0b000;
         transform: translateY(-2px);
         box-shadow: 0 4px 12px rgba(255, 199, 44, 0.3);
+        text-decoration: none;
     }
     
     /* Main content area */
@@ -128,19 +130,53 @@ st.markdown("""
     /* Button styling */
     .stButton > button {
         background: #ffc72c !important;
-        color: #154734 !important;
+        color: #000000 !important;
         border: none !important;
         border-radius: 8px !important;
         padding: 0.75rem 2rem !important;
         font-weight: 600 !important;
         font-size: 16px !important;
         transition: all 0.3s ease !important;
+        text-decoration: none !important;
     }
     
     .stButton > button:hover {
         background: #e0b000 !important;
+        color: #000000 !important;
         transform: translateY(-2px) !important;
         box-shadow: 0 6px 20px rgba(255, 199, 44, 0.3) !important;
+        text-decoration: none !important;
+    }
+    
+    /* Remove underlines from all buttons and links */
+    button, a, .nav-btn, .stButton > button {
+        text-decoration: none !important;
+    }
+    
+    button:hover, a:hover, .nav-btn:hover, .stButton > button:hover {
+        text-decoration: none !important;
+    }
+    
+    /* Additional comprehensive underline removal */
+    button *, a *, .nav-btn *, .stButton > button * {
+        text-decoration: none !important;
+    }
+    
+    /* Remove underlines from any text elements inside buttons */
+    button span, button div, button p, button i,
+    a span, a div, a p, a i,
+    .nav-btn span, .nav-btn div, .nav-btn p, .nav-btn i,
+    .stButton > button span, .stButton > button div, .stButton > button p, .stButton > button i {
+        text-decoration: none !important;
+    }
+    
+    /* Force remove underlines from all interactive elements */
+    [role="button"], [type="button"], [type="submit"] {
+        text-decoration: none !important;
+    }
+    
+    [role="button"]:hover, [type="button"]:hover, [type="submit"]:hover {
+        text-decoration: none !important;
     }
     
     /* File uploader styling */
@@ -225,7 +261,7 @@ st.markdown("""
         flex: 1;
         padding: 1rem;
         overflow-y: auto;
-        color: #f8f9fa;
+        color: #000000;
     }
     
     .chatbot-input {
@@ -240,8 +276,8 @@ st.markdown("""
         padding: 0.5rem;
         border: 1px solid #ffc72c;
         border-radius: 6px;
-        background: rgba(255, 255, 255, 0.1);
-        color: #f8f9fa;
+        background: rgba(255, 255, 255, 0.9);
+        color: #000000;
     }
     
     .chatbot-input button {
@@ -270,6 +306,24 @@ st.markdown("""
     
     .stMarkdown p {
         color: #f8f9fa !important;
+    }
+    
+    /* Make button text black */
+    .stButton > button {
+        color: #000000 !important;
+    }
+    
+    .stButton > button:hover {
+        color: #000000 !important;
+    }
+    
+    /* Make navigation button text black */
+    .nav-btn {
+        color: #000000 !important;
+    }
+    
+    .nav-btn:hover {
+        color: #000000 !important;
     }
     
     /* Metrics styling */
@@ -302,11 +356,11 @@ if 'optimized_data' not in st.session_state:
 # Top Navigation Bar
 st.markdown("""
 <div class="top-nav">
-    <div class="nav-logo">:) Diversity in Procurement</div>
+    <div class="nav-logo"><i class="bi bi-building"></i> Diversity in Procurement</div>
     <div class="nav-buttons">
-        <a href="#home" class="nav-btn">^ Home</a>
-        <a href="#dashboard" class="nav-btn">+ Dashboard</a>
-        <a href="#reports" class="nav-btn">= Reports</a>
+        <a href="#home" class="nav-btn"><i class="bi bi-house"></i> Home</a>
+        <a href="#dashboard" class="nav-btn"><i class="bi bi-graph-up"></i> Dashboard</a>
+        <a href="#reports" class="nav-btn"><i class="bi bi-file-earmark-text"></i> Reports</a>
     </div>
 </div>
 """, unsafe_allow_html=True)
@@ -319,7 +373,7 @@ st.markdown('<h1 class="dashboard-title">Diversity in Procurement Dashboard</h1>
 
 # Upload Section
 st.markdown('<div class="dashboard-card">', unsafe_allow_html=True)
-st.markdown('<h2 class="card-title">[] Data Upload</h2>', unsafe_allow_html=True)
+st.markdown('<h2 class="card-title"><i class="bi bi-folder"></i> Data Upload</h2>', unsafe_allow_html=True)
 
 col1, col2, col3 = st.columns([1, 2, 1])
 with col2:
@@ -338,14 +392,14 @@ with col2:
             # Read the uploaded file
             df = pd.read_excel(uploaded_file)
             st.session_state.uploaded_data = df
-            st.success(f":) Successfully uploaded file with {len(df)} rows and {len(df.columns)} columns!")
+            st.success(f"<i class='bi bi-check-circle'></i> Successfully uploaded file with {len(df)} rows and {len(df.columns)} columns!", unsafe_allow_html=True)
             
             # Show preview of data
-            with st.expander("[] Preview Data"):
+            with st.expander("<i class='bi bi-table'></i> Preview Data"):
                 st.dataframe(df.head(10), use_container_width=True)
                 
         except Exception as e:
-            st.error(f":( Error reading file: {str(e)}")
+            st.error(f"<i class='bi bi-x-circle'></i> Error reading file: {str(e)}", unsafe_allow_html=True)
     
     st.markdown('</div>', unsafe_allow_html=True)
 
@@ -354,44 +408,44 @@ st.markdown('</div>', unsafe_allow_html=True)
 # Action Buttons Section
 if st.session_state.uploaded_data is not None:
     st.markdown('<div class="dashboard-card">', unsafe_allow_html=True)
-    st.markdown('<h2 class="card-title">* Actions</h2>', unsafe_allow_html=True)
+    st.markdown('<h2 class="card-title"><i class="bi bi-rocket"></i> Actions</h2>', unsafe_allow_html=True)
     
     col1, col2, col3 = st.columns(3)
     
     with col1:
-        if st.button("+ Generate Report", use_container_width=True):
+        if st.button("<i class='bi bi-graph-up'></i> Generate Report", use_container_width=True, help="Generate comprehensive diversity report"):
             with st.spinner("Generating report..."):
                 # Simulate report generation
                 import time
                 time.sleep(2)
                 st.session_state.report_generated = True
-                st.success(":) Report generated successfully!")
+                st.success("<i class='bi bi-check-circle'></i> Report generated successfully!", unsafe_allow_html=True)
     
     with col2:
-        if st.button("^ Generate Charts", use_container_width=True):
+        if st.button("<i class='bi bi-bar-chart'></i> Generate Charts", use_container_width=True, help="Create data visualizations"):
             with st.spinner("Creating visualizations..."):
                 # Simulate chart generation
                 import time
                 time.sleep(1.5)
                 st.session_state.charts_generated = True
-                st.success(":) Charts generated successfully!")
+                st.success("<i class='bi bi-check-circle'></i> Charts generated successfully!", unsafe_allow_html=True)
     
     with col3:
-        if st.button("~ Optimize Data", use_container_width=True):
+        if st.button("<i class='bi bi-arrow-clockwise'></i> Optimize Data", use_container_width=True, help="Optimize and clean data"):
             with st.spinner("Optimizing data..."):
                 # Simulate data optimization
                 import time
                 time.sleep(2)
                 # Create mock optimized data
                 st.session_state.optimized_data = st.session_state.uploaded_data.copy()
-                st.success(":) Data optimized successfully!")
+                st.success("<i class='bi bi-check-circle'></i> Data optimized successfully!", unsafe_allow_html=True)
     
     st.markdown('</div>', unsafe_allow_html=True)
 
 # Report Section
 if st.session_state.report_generated:
     st.markdown('<div class="dashboard-card">', unsafe_allow_html=True)
-    st.markdown('<h2 class="card-title">= Generated Report</h2>', unsafe_allow_html=True)
+    st.markdown('<h2 class="card-title"><i class="bi bi-file-earmark-text"></i> Generated Report</h2>', unsafe_allow_html=True)
     
     # Mock report content
     col1, col2, col3, col4 = st.columns(4)
@@ -416,7 +470,7 @@ if st.session_state.report_generated:
         st.metric("Total Spend", "$2.4M", "15%")
         st.markdown('</div>', unsafe_allow_html=True)
     
-    st.markdown("### + Key Insights")
+    st.markdown("### <i class='bi bi-graph-up'></i> Key Insights")
     st.markdown("""
     - **Supplier Diversity**: Current diversity rate is 25.1%, showing improvement from last quarter
     - **Spending Analysis**: Diverse suppliers account for 18% of total procurement spend
@@ -429,7 +483,7 @@ if st.session_state.report_generated:
 # Charts Section
 if st.session_state.charts_generated:
     st.markdown('<div class="dashboard-card">', unsafe_allow_html=True)
-    st.markdown('<h2 class="card-title">^ Data Visualizations</h2>', unsafe_allow_html=True)
+    st.markdown('<h2 class="card-title"><i class="bi bi-bar-chart"></i> Data Visualizations</h2>', unsafe_allow_html=True)
     
     col1, col2 = st.columns(2)
     
@@ -518,9 +572,9 @@ if st.session_state.charts_generated:
 # Data Preview Section
 if st.session_state.uploaded_data is not None:
     st.markdown('<div class="dashboard-card">', unsafe_allow_html=True)
-    st.markdown('<h2 class="card-title">? Data Overview</h2>', unsafe_allow_html=True)
+    st.markdown('<h2 class="card-title"><i class="bi bi-search"></i> Data Overview</h2>', unsafe_allow_html=True)
     
-    tab1, tab2 = st.tabs(["+ Original Data", "~ Optimized Data"])
+    tab1, tab2 = st.tabs(["<i class='bi bi-graph-up'></i> Original Data", "<i class='bi bi-arrow-clockwise'></i> Optimized Data"])
     
     with tab1:
         st.dataframe(st.session_state.uploaded_data, use_container_width=True)
@@ -539,23 +593,23 @@ st.markdown('</div>', unsafe_allow_html=True)
 st.markdown("""
 <div class="chatbot-container">
     <button class="chatbot-toggle" onclick="toggleChatbot()" title="Chat Assistant">
-        ?
+        <i class="bi bi-chat-dots"></i>
     </button>
 </div>
 
 <div class="chatbot-window" id="chatbot-window">
     <div class="chatbot-header">
-        <span>:) Procurement Assistant</span>
+        <span><i class="bi bi-robot"></i> Procurement Assistant</span>
         <button onclick="toggleChatbot()" style="background: none; border: none; color: #154734; font-size: 20px; cursor: pointer;">&times;</button>
     </div>
     <div class="chatbot-messages" id="chatbot-messages">
         <div style="margin-bottom: 1rem; padding: 0.5rem; background: rgba(255, 199, 44, 0.1); border-radius: 6px;">
-            <strong>Assistant:</strong> Hello! I'm here to help you with your procurement diversity analysis. How can I assist you today?
+            <strong><i class="bi bi-robot"></i> Assistant:</strong> Hello! I'm here to help you with your procurement diversity analysis. How can I assist you today?
         </div>
     </div>
     <div class="chatbot-input">
         <input type="text" placeholder="Type your message..." id="chat-input" onkeypress="handleChatKeyPress(event)">
-        <button onclick="sendMessage()">Send</button>
+        <button onclick="sendMessage()"><i class="bi bi-send"></i></button>
     </div>
 </div>
 
@@ -587,7 +641,7 @@ function sendMessage() {
         setTimeout(() => {
             const botMsg = document.createElement('div');
             botMsg.style.cssText = 'margin-bottom: 1rem; padding: 0.5rem; background: rgba(255, 199, 44, 0.1); border-radius: 6px;';
-            botMsg.innerHTML = '<strong>Assistant:</strong> I understand you\\'re asking about "' + message + '". I can help you analyze your procurement data, generate reports, and provide insights on supplier diversity metrics.';
+            botMsg.innerHTML = '<strong><i class="bi bi-robot"></i> Assistant:</strong> I understand you\\'re asking about "' + message + '". I can help you analyze your procurement data, generate reports, and provide insights on supplier diversity metrics.';
             messagesContainer.appendChild(botMsg);
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
         }, 1000);

@@ -12,9 +12,9 @@ def install_requirements():
     """Install required packages if not already installed"""
     try:
         subprocess.check_call([sys.executable, "-m", "pip", "install", "-r", "requirements.txt"])
-        print("✅ Dependencies installed successfully!")
+        print("✓ Dependencies installed successfully!")
     except subprocess.CalledProcessError:
-        print("❌ Error installing dependencies. Please install manually:")
+        print("✗ Error installing dependencies. Please install manually:")
         print("pip install -r requirements.txt")
         return False
     return True
@@ -31,7 +31,7 @@ def run_streamlit():
     except KeyboardInterrupt:
         print("\n👋 Application stopped by user")
     except Exception as e:
-        print(f"❌ Error running application: {e}")
+        print(f"✗ Error running application: {e}")
 
 if __name__ == "__main__":
     print("🚀 Starting Diversity in Procurement Dashboard...")
@@ -43,4 +43,4 @@ if __name__ == "__main__":
         print("⏹️  Press Ctrl+C to stop the application")
         run_streamlit()
     else:
-        print("❌ Failed to start application due to dependency issues")
+        print("✗ Failed to start application due to dependency issues")
