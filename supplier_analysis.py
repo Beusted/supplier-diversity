@@ -72,7 +72,7 @@ if __name__ == "__main__":
     sizes = [small_count, big_count]
     poly_green = "#154734"
     mustang_gold = "#BD8B13"
-    colors = [poly_green, mustang_gold]
+    colors = [mustang_gold, poly_green]
     explode = (0.1, 0)  # explode small business slice
     
     ax1.pie(sizes, explode=explode, labels=labels, colors=colors, autopct='%1.1f%%',
