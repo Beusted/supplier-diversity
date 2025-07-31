@@ -1,0 +1,21 @@
+Match_Rank,Current_Supplier,Small_Business,Purchase_Amount,Similarity_Score,Matching_Words,Overlap_Count,Jaccard_Similarity,Business_Category,Line_Description,Keywords
+1,HURON CONSULTING SERVICES,Small Biz Consulting,1635.52,0.6329,"consulting, services",2,0.2857142857142857,Consulting,Consulting services to quantitative and,consulting services business advice management strategy
+2,OLOGIE INC.,Community Print Shop,300000.0,0.5973,"services, marketing",2,0.25,Printing/Marketing,Branding and Marketing Services,printing services marketing materials brochures business cards
+3,RIB LINE BY BRIAN LLC,Eco-Friendly Cleaning,750.75,0.5903,"friendly, eco",2,0.2222222222222222,Office Supplies,Eco-friendly plate utensils and napkins.,cleaning supplies janitorial maintenance eco friendly
+4,AMERICAN ASSOC OF STATE C,Small Biz Consulting,15750.0,0.5184,"consulting, services",2,0.2222222222222222,Consulting,Consulting services by Dorothy Leland se,consulting services business advice management strategy
+5,"BKM OFFICE ENVIRONMENTS,I",Local Office Supply Co,3337.98,0.5123,"furniture, desk, office",3,0.2727272727272727,Office Supplies,BKM Office Desk Furniture 178A Student H,office supplies paper pens furniture desk chairs
+6,AMF MEDIA GROUP,Small Biz Consulting,10000.0,0.5026,"consulting, services",2,0.25,Consulting,Public relations and consulting services,consulting services business advice management strategy
+7,"NAC PHILOTECHNICS, LTD",Local Transportation LLC,3000.0,0.5025,"management, transportation",2,0.2857142857142857,Consulting,Waste Management Transportation Processi,vehicle transportation fleet management logistics
+8,"PACIFIC HARVEST CATERING,",Community Catering Services,16087.5,0.4822,"catering, dinner",2,0.2222222222222222,Food/Catering,Catering for IPP partners dinner,food catering meals breakfast lunch dinner events
+9,HOMEYER CNSLTG,Small Biz Consulting,12790.0,0.4733,"services, consulting",2,0.2222222222222222,Consulting,Water Consulting Services Monitoring Per,consulting services business advice management strategy
+10,BOONE PRINTING & GRAPHICS,Community Print Shop,3.63,0.46,cards,1,0.14285714285714285,Printing/Marketing,Cards,printing services marketing materials brochures business cards
+11,BOONE PRINTING & GRAPHICS,Community Print Shop,1.12,0.46,cards,1,0.14285714285714285,Printing/Marketing,Cards,printing services marketing materials brochures business cards
+12,BOONE PRINTING & GRAPHICS,Community Print Shop,117.22,0.46,cards,1,0.14285714285714285,Printing/Marketing,Cards,printing services marketing materials brochures business cards
+13,BOONE PRINTING & GRAPHICS,Community Print Shop,8.68,0.46,cards,1,0.14285714285714285,Printing/Marketing,Cards,printing services marketing materials brochures business cards
+14,BOONE PRINTING & GRAPHICS,Community Print Shop,908.48,0.46,cards,1,0.14285714285714285,Printing/Marketing,Cards,printing services marketing materials brochures business cards
+15,BOONE PRINTING & GRAPHICS,Community Print Shop,380.97,0.46,cards,1,0.14285714285714285,Printing/Marketing,Cards,printing services marketing materials brochures business cards
+16,BOONE PRINTING & GRAPHICS,Community Print Shop,6.72,0.46,cards,1,0.14285714285714285,Printing/Marketing,Cards,printing services marketing materials brochures business cards
+17,BOONE PRINTING & GRAPHICS,Community Print Shop,703.34,0.46,cards,1,0.14285714285714285,Printing/Marketing,Cards,printing services marketing materials brochures business cards
+18,BOONE PRINTING & GRAPHICS,Community Print Shop,7.84,0.46,cards,1,0.14285714285714285,Printing/Marketing,Cards,printing services marketing materials brochures business cards
+19,BOONE PRINTING & GRAPHICS,Community Print Shop,820.56,0.46,cards,1,0.14285714285714285,Printing/Marketing,Cards,printing services marketing materials brochures business cards
+20,UNICON INC,Small Biz Consulting,20000.0,0.4582,"consulting, services",2,0.2222222222222222,Consulting,Consulting Services per attached Stateme,consulting services business advice management strategy

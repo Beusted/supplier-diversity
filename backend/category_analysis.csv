@@ -1,0 +1,11 @@
+,PurchaseAmount,PurchaseAmount,SimilarityScore
+,count,sum,mean
+Category,,,
+Cleaning,102,1905480.56,0.151
+Consulting,242,32763849.61,0.122
+Food/Catering,50,541493.76,0.152
+Laboratory,1,125000.0,0.377
+Office Supplies,521,33610301.61,0.121
+Other,27,240056.39,0.207
+Printing/Marketing,330,34251173.66,0.111
+Technology,1,535.88,0.207
