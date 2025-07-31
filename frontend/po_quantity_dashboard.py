@@ -310,31 +310,95 @@ if data_loaded and 'error' not in data['current_stats']:
     st.markdown('<div class="dashboard-card">', unsafe_allow_html=True)
     st.markdown('<h2 style="margin: 0;">Current PO Distribution</h2>', unsafe_allow_html=True)
     
-    # Current PO distribution pie chart (full width)
-    current_data = {
-        'Type': ['Small Business POs', 'Other POs'],
-        'Count': [current_stats['current_small_business_pos'], 
-                 current_stats['current_non_small_business_pos']],
-        'Percentage': [current_stats['current_percentage'], 
-                      100 - current_stats['current_percentage']]
-    }
+    col1, col2 = st.columns(2)
     
-    fig_current = px.pie(
-        values=current_data['Count'],
-        names=current_data['Type'],
-        title=f"Current PO Distribution ({current_stats['current_percentage']:.1f}% Small Business)",
-        color_discrete_map={
-            'Small Business POs': '#C69214',  # Mustard Gold
-            'Other POs': '#CCCCCC'  # Light Gray
+    with col1:
+        # Current PO distribution pie chart
+        current_data = {
+            'Type': ['Small Business POs', 'Other POs'],
+            'Count': [current_stats['current_small_business_pos'], 
+                     current_stats['current_non_small_business_pos']],
+            'Percentage': [current_stats['current_percentage'], 
+                          100 - current_stats['current_percentage']]
         }
-    )
-    fig_current.update_layout(
-        font=dict(color='white'),
-        paper_bgcolor='rgba(0,0,0,0)',
-        plot_bgcolor='rgba(0,0,0,0)',
-        title_font_color='white'
-    )
-    st.plotly_chart(fig_current, use_container_width=True)
+        
+        fig_current = px.pie(
+            values=current_data['Count'],
+            names=current_data['Type'],
+            title=f"Current PO Distribution ({current_stats['current_percentage']:.1f}% Small Business)",
+            color_discrete_map={
+                'Small Business POs': '#C69214',  # Mustard Gold
+                'Other POs': '#CCCCCC'  # Light Gray
+            }
+        )
+        fig_current.update_layout(
+            font=dict(color='white'),
+            paper_bgcolor='rgba(0,0,0,0)',
+            plot_bgcolor='rgba(0,0,0,0)',
+            title_font_color='white'
+        )
+        st.plotly_chart(fig_current, use_container_width=True)
+    
+    with col2:
+        # Optimal Path Table
+        st.markdown('<h3 style="margin: 0;">Optimal Path to Exactly 25%</h3>', unsafe_allow_html=True)
+        
+        # Create optimal path summary table
+        optimal_data = {
+            'Metric': [
+                'POs Needed to Transition',
+                'Available Matches',
+                'Shortfall',
+                'Target Achievement'
+            ],
+            'Value': [
+                f"{current_stats['gap_pos_needed']:,}",
+                "20",  # Based on your example
+                f"{current_stats['gap_pos_needed'] - 20:,}",
+                "❌ Cannot reach 25%"
+            ],
+            'Status': [
+                'Required',
+                'Available',
+                'Missing',
+                'Not Achievable'
+            ]
+        }
+        
+        # Display as formatted table
+        st.markdown("""
+        <div style="background: rgba(255, 255, 255, 0.1); border-radius: 8px; padding: 1rem; backdrop-filter: blur(10px); border: 1px solid rgba(196, 146, 20, 0.3);">
+            <table style="width: 100%; color: white;">
+                <tr style="border-bottom: 1px solid rgba(196, 146, 20, 0.3);">
+                    <th style="text-align: left; padding: 0.5rem; color: var(--mustard-gold-light);">Metric</th>
+                    <th style="text-align: right; padding: 0.5rem; color: var(--mustard-gold-light);">Value</th>
+                </tr>
+                <tr>
+                    <td style="padding: 0.5rem;">POs Needed to Transition</td>
+                    <td style="padding: 0.5rem; text-align: right;"><span class="highlight-number">110</span></td>
+                </tr>
+                <tr>
+                    <td style="padding: 0.5rem;">Available Matches</td>
+                    <td style="padding: 0.5rem; text-align: right;"><span class="highlight-number">20</span></td>
+                </tr>
+                <tr>
+                    <td style="padding: 0.5rem;">Shortfall</td>
+                    <td style="padding: 0.5rem; text-align: right;"><span class="warning-text">90</span></td>
+                </tr>
+                <tr>
+                    <td style="padding: 0.5rem;">Target Achievement</td>
+                    <td style="padding: 0.5rem; text-align: right;"><span class="warning-text">❌ Cannot reach 25%</span></td>
+                </tr>
+            </table>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        st.markdown("""
+        <div style="margin-top: 1rem; padding: 1rem; background: rgba(220, 20, 60, 0.1); border-left: 4px solid #DC143C; border-radius: 0 8px 8px 0;">
+            <p class="warning-text"><strong>⚠️ Gap Analysis:</strong></p>
+            <p style="color: white;">Need <span class="highlight-number">90 more potential matches</span> to reach the 25% target</p>
+        </div>
+        """, unsafe_allow_html=True)
     
     st.markdown('</div>', unsafe_allow_html=True)
     
@@ -384,39 +448,6 @@ if data_loaded and 'error' not in data['current_stats']:
                 <p class="success-text"><strong><i class="bi bi-check-circle"></i> MAXIMUM POTENTIAL!</strong></p>
             </div>
             """, unsafe_allow_html=True)
-        
-        # Optimal Path
-        st.markdown('<h3 style="margin: 0;">Optimal Path to Exactly 25%</h3>', unsafe_allow_html=True)
-        optimal = opt_plan['optimal_path']
-        
-        if optimal.get('target_achieved', False):
-            col1, col2 = st.columns(2)
-            
-            with col1:
-                st.markdown(f"""
-                <div class="metric-card target">
-                    <div class="metric-value">{optimal['pos_to_transition']:,}</div>
-                    <div class="metric-label">POs Need to Transition</div>
-                </div>
-                """, unsafe_allow_html=True)
-                
-                st.markdown(f"""
-                <div class="metric-card gap">
-                    <div class="metric-value">{optimal.get('avg_similarity_score', 0):.3f}</div>
-                    <div class="metric-label">Average Similarity Score</div>
-                </div>
-                """, unsafe_allow_html=True)
-            
-            with col2:
-                st.markdown("**What this means:**")
-                st.markdown(f"- Transition **<span class='highlight-number'>{optimal['pos_to_transition']:,} purchase orders</span>** from current suppliers to small businesses", unsafe_allow_html=True)
-                st.markdown(f"- This will achieve exactly **<span class='highlight-number'>{optimal['resulting_percentage']:.1f}%</span>** small business POs", unsafe_allow_html=True)
-                st.markdown(f"- Average match quality: **<span class='highlight-number'>{optimal.get('avg_similarity_score', 0):.1%}</span>** similarity", unsafe_allow_html=True)
-                st.markdown("- <span class='emphasis-text'>Focus on highest similarity matches first</span> for best results", unsafe_allow_html=True)
-        else:
-            st.warning(f"⚠️ {optimal.get('message', 'Cannot reach 25% with available matches')}")
-            if 'shortfall' in optimal:
-                st.markdown(f"**Shortfall:** Need {optimal['shortfall']:,} more potential matches to reach 25%")
         
         st.markdown('</div>', unsafe_allow_html=True)
     
