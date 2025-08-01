@@ -1,7 +1,9 @@
-# [Small Business Supplier Diversity Dashboard](https://linktr.ee/whyoho)
+# [Duckling Dashboard](https://linktr.ee/whyoho)
 
 ## Overview
-The Small Business Supplier Diversity Dashboard is an innovative AI-powered analytics platform designed to help organizations achieve their small business procurement goals. It leverages machine learning algorithms and data analytics to analyze current procurement patterns, identify gaps, and provide actionable recommendations for transitioning purchase orders to small businesses. The dashboard specifically focuses on reaching the 25% small business procurement target through data-driven insights and strategic planning.
+Duckling Dashboard is an innovative AI-powered dashboard designed to help organizations achieve their small business procurement goals. It leverages machine learning algorithms and data analytics to analyze current procurement patterns, identify gaps, and provide actionable recommendations for transitioning purchase orders to small businesses. 
+
+The dashboard specifically focuses on reaching the 25% small business procurement target through data-driven insights and strategic planning.
 
 ## Key Features
 - **AI-Powered Supplier Matching**: Uses machine learning algorithms to identify optimal supplier transition opportunities based on similarity analysis.
@@ -12,11 +14,10 @@ The Small Business Supplier Diversity Dashboard is an innovative AI-powered anal
 
 ## Technologies
 - **Programming Language**: Python
-- **Framework**: Streamlit
-- **Data Processing**: Pandas, NumPy
-- **Machine Learning**: Scikit-learn (TF-IDF, Cosine Similarity)
+- **User Interface**: Streamlit
+- **Data Storage/Processing**: Pandas, NumPy, AWS Lambda, S3, DynamoDB
+- **Machine Learning**: Scikit-learn (TF-IDF, Cosine Similarity), Amazon Bedrock (Claude Sonnet 3.5)
 - **Visualization**: Plotly, Interactive Charts
-- **Styling**: Custom CSS with Cal Poly branding
 
 ## Installation and Setup
 1. Clone the repository to your local machine.
@@ -24,16 +25,14 @@ The Small Business Supplier Diversity Dashboard is an innovative AI-powered anal
    ```bash
    pip install streamlit plotly pandas numpy scikit-learn pathlib
    ```
-3. Ensure all CSV data files are present in the `backend/` directory.
-4. Run the dashboard:
+3. Run the dashboard:
    ```bash
    python run_po_dashboard.py
    ```
 5. Access the dashboard via http://localhost:8503
 
 ## Usage
-- Navigate through different sections using the top navigation bar (Dashboard, Settings, About).
-- Toggle between light and dark themes using the Settings panel.
+- Navigate through different sections using the top navigation bar and toggle between light and dark themes.
 - Explore various analytics sections including current state analysis, transition scenarios, and implementation planning.
 - Review detailed supplier matching recommendations and quick wins for immediate impact.
 - Use the phased implementation plan to develop a strategic roadmap for achieving the 25% target.
@@ -43,17 +42,6 @@ The Small Business Supplier Diversity Dashboard is an innovative AI-powered anal
 - To adjust similarity thresholds or matching algorithms, modify the parameters in the supplier matching functions.
 - Color themes and styling can be customized through the CSS variables in the dashboard file.
 - Data sources can be updated by replacing CSV files in the `backend/` directory with your organization's procurement data.
-
-## Contributing
-- Contributions are welcome! Please make a pull request to propose changes or enhancements.
-- Areas for contribution include: additional analytics features, improved visualization options, enhanced matching algorithms, or mobile responsiveness improvements.
-- For questions or collaboration opportunities, reach out to [instructor-email@calpoly.edu].
-
-## Support and Feedback
-- The dashboard includes comprehensive error handling and troubleshooting guidance.
-- For technical support, check the troubleshooting section or contact the development team.
-- Feature requests and feedback can be submitted through the project repository or direct contact.
-- Educational support for understanding AI concepts and procurement analytics is available through Cal Poly AI Summer Camp resources.
 
 ## Project Impact
 This dashboard demonstrates practical applications of AI in procurement by:
