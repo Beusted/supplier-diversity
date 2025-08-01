@@ -183,47 +183,6 @@ st.markdown("""
         box-shadow: 0 6px 20px rgba(21, 71, 52, 0.4);
     }
     
-    /* Position navigation buttons in topbar */
-    .topbar-nav-buttons {
-        position: fixed;
-        top: 12px;
-        right: 2rem;
-        z-index: 1000000;
-        display: flex;
-        gap: 1rem;
-        width: auto;
-    }
-    
-    .topbar-nav-buttons .stColumns {
-        width: auto !important;
-        gap: 1rem !important;
-    }
-    
-    .topbar-nav-buttons button {
-        background: var(--mustard-gold) !important;
-        color: var(--poly-green-dark) !important;
-        border: 2px solid var(--mustard-gold) !important;
-        padding: 0.6rem 1.2rem !important;
-        border-radius: 8px !important;
-        font-weight: 700 !important;
-        font-size: 0.9rem !important;
-        cursor: pointer !important;
-        transition: all 0.3s ease !important;
-        box-shadow: 0 3px 8px rgba(0,0,0,0.15) !important;
-        font-family: 'Inter', sans-serif !important;
-        height: 45px !important;
-        white-space: nowrap !important;
-        min-width: 120px !important;
-    }
-    
-    .topbar-nav-buttons button:hover {
-        background: var(--poly-green) !important;
-        color: var(--mustard-gold) !important;
-        border-color: var(--poly-green) !important;
-        transform: translateY(-2px) !important;
-        box-shadow: 0 6px 20px rgba(21, 71, 52, 0.4) !important;
-    }
-    
     .block-container {
         padding-top: 90px !important;
         padding-bottom: 2rem !important;
@@ -234,8 +193,8 @@ st.markdown("""
     .dashboard-card {
         background: """ + theme['bg_card'] + """ !important;
         border-radius: 12px;
-        padding: 2rem;
-        margin-bottom: 2rem;
+        padding: 1.2rem;
+        margin-bottom: 1.5rem;
         box-shadow: none !important;
         backdrop-filter: blur(10px);
         border: 1px solid rgba(196, 146, 20, 0.2);
@@ -244,11 +203,11 @@ st.markdown("""
     .metric-card {
         background: linear-gradient(135deg, #ffc72c 0%, #ffb000 100%);
         border-radius: 8px;
-        padding: 1.5rem;
+        padding: 0.8rem;
         text-align: center;
         color: #154734;
         font-weight: bold;
-        margin-bottom: 1rem;
+        margin-bottom: 0.5rem;
     }
     
     .metric-card.current {
@@ -267,21 +226,21 @@ st.markdown("""
     }
     
     .metric-value {
-        font-size: 2.5rem;
+        font-size: 1.8rem;
         font-weight: 700;
-        margin-bottom: 0.5rem;
+        margin-bottom: 0.3rem;
     }
     
     .metric-label {
-        font-size: 1rem;
+        font-size: 0.85rem;
         opacity: 0.9;
     }
     
     .phase-card {
         background: rgba(21, 71, 52, 0.05);
         border-left: 4px solid #154734;
-        padding: 1rem;
-        margin: 0.5rem 0;
+        padding: 0.8rem;
+        margin: 0.3rem 0;
         border-radius: 0 8px 8px 0;
     }
     
@@ -295,60 +254,30 @@ st.markdown("""
     }
     
     .big-number {
-        font-size: 4rem;
+        font-size: 2.5rem;
         font-weight: 800;
         text-align: center;
-        margin: 1rem 0;
+        margin: 0.5rem 0;
     }
     
     .current-number { color: #ff6b6b; }
     .target-number { color: #51cf66; }
     .gap-number { color: #339af0; }
     
-    /* Comprehensive text color coverage for light/dark mode - EXCEPT navigation buttons */
-    p:not(.topbar-nav-buttons p), 
-    div:not(.topbar-nav-buttons div), 
-    span:not(.topbar-nav-buttons span), 
+    /* Comprehensive text color coverage for light/dark mode */
+    p, 
+    div, 
+    span, 
     li, ul, ol, strong, em, b, i {
         color: """ + theme['text_body'] + """ !important;
     }
     
-    /* Streamlit specific text elements - EXCEPT navigation buttons */
-    .stMarkdown:not(.topbar-nav-buttons .stMarkdown), 
-    .stMarkdown p:not(.topbar-nav-buttons p), 
-    .stMarkdown div:not(.topbar-nav-buttons div), 
-    .stMarkdown span:not(.topbar-nav-buttons span) {
+    /* Streamlit specific text elements */
+    .stMarkdown, 
+    .stMarkdown p, 
+    .stMarkdown div, 
+    .stMarkdown span {
         color: """ + theme['text_body'] + """ !important;
-    }
-    
-    /* ULTRA-SPECIFIC RULES FOR NAVIGATION BUTTON TEXT - MUST STAY WHITE */
-    .topbar-nav-buttons .stButton > button,
-    .topbar-nav-buttons .stButton > button *,
-    .topbar-nav-buttons .stButton > button span,
-    .topbar-nav-buttons .stButton > button p,
-    .topbar-nav-buttons .stButton > button div {
-        color: #FFFFFF !important;
-    }
-    
-    .topbar-nav-buttons .stButton > button:hover,
-    .topbar-nav-buttons .stButton > button:hover *,
-    .topbar-nav-buttons .stButton > button:hover span,
-    .topbar-nav-buttons .stButton > button:hover p,
-    .topbar-nav-buttons .stButton > button:hover div {
-        color: #FFFFFF !important;
-    }
-    
-    .topbar-nav-buttons .stButton > button:active,
-    .topbar-nav-buttons .stButton > button:active *,
-    .topbar-nav-buttons .stButton > button:active span,
-    .topbar-nav-buttons .stButton > button:active p,
-    .topbar-nav-buttons .stButton > button:active div,
-    .topbar-nav-buttons .stButton > button:focus,
-    .topbar-nav-buttons .stButton > button:focus *,
-    .topbar-nav-buttons .stButton > button:focus span,
-    .topbar-nav-buttons .stButton > button:focus p,
-    .topbar-nav-buttons .stButton > button:focus div {
-        color: #FFFFFF !important;
     }
     
     /* OVERRIDE ANY STREAMLIT DEFAULT BUTTON TEXT COLORS */
@@ -379,12 +308,33 @@ st.markdown("""
         color: #FFFFFF !important;
     }
     
+    /* Remove empty containers and reduce spacing */
+    .stContainer {
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+    
+    /* Reduce column spacing */
+    .stColumns {
+        gap: 0.5rem !important;
+    }
+    
+    /* Remove empty space from elements */
+    .element-container:empty {
+        display: none !important;
+    }
+    
+    /* Reduce vertical spacing between elements */
+    .stMarkdown {
+        margin-bottom: 0.5rem !important;
+    }
+    
     .po-stat {
         background: rgba(21, 71, 52, 0.1);
-        padding: 1rem;
+        padding: 0.8rem;
         border-radius: 8px;
         text-align: center;
-        margin: 0.5rem 0;
+        margin: 0.3rem 0;
         color: """ + theme['text_body'] + """;
         backdrop-filter: blur(10px);
         border: 1px solid rgba(196, 146, 20, 0.3);
@@ -447,38 +397,6 @@ st.markdown("""
         background-color: var(--poly-green) !important;
         color: #FFFFFF !important;
         outline: none !important;
-    }
-    
-    /* Target all navigation and settings buttons specifically with static white text */
-    .topbar-nav-buttons .stButton > button {
-        background-color: var(--mustard-gold) !important;
-        color: #FFFFFF !important;
-        border: none !important;
-        font-weight: 500 !important;
-        padding: 0.5rem 1rem !important;
-        border-radius: 6px !important;
-    }
-    
-    .topbar-nav-buttons .stButton > button:hover {
-        background-color: var(--mustard-gold-light) !important;
-        color: #FFFFFF !important;
-        transform: translateY(-1px) !important;
-        box-shadow: 0 2px 8px rgba(196, 146, 20, 0.3) !important;
-    }
-    
-    .topbar-nav-buttons .stButton > button:active,
-    .topbar-nav-buttons .stButton > button:focus {
-        background-color: var(--poly-green) !important;
-        color: #FFFFFF !important;
-        outline: none !important;
-    }
-    
-    /* Override any theme-based text color changes for navigation buttons */
-    .topbar-nav-buttons .stButton > button,
-    .topbar-nav-buttons .stButton > button *,
-    .topbar-nav-buttons .stButton > button span,
-    .topbar-nav-buttons .stButton > button p {
-        color: #FFFFFF !important;
     }
     
     /* Settings panel buttons with static white text - NO YELLOW HIGHLIGHTS */
@@ -548,44 +466,6 @@ st.markdown("""
 .stButton > button:focus div,
 .stButton > button:focus strong,
 .stButton > button:focus em {
-    color: #FFFFFF !important;
-}
-
-/* TOPBAR NAVIGATION SPECIFIC - ABSOLUTE PRIORITY */
-.topbar-nav-buttons .stButton > button,
-.topbar-nav-buttons .stButton > button *,
-.topbar-nav-buttons .stButton > button span,
-.topbar-nav-buttons .stButton > button p,
-.topbar-nav-buttons .stButton > button div,
-.topbar-nav-buttons .stButton > button strong,
-.topbar-nav-buttons .stButton > button em {
-    color: #FFFFFF !important;
-}
-
-.topbar-nav-buttons .stButton > button:hover,
-.topbar-nav-buttons .stButton > button:hover *,
-.topbar-nav-buttons .stButton > button:hover span,
-.topbar-nav-buttons .stButton > button:hover p,
-.topbar-nav-buttons .stButton > button:hover div,
-.topbar-nav-buttons .stButton > button:hover strong,
-.topbar-nav-buttons .stButton > button:hover em {
-    color: #FFFFFF !important;
-}
-
-.topbar-nav-buttons .stButton > button:active,
-.topbar-nav-buttons .stButton > button:active *,
-.topbar-nav-buttons .stButton > button:active span,
-.topbar-nav-buttons .stButton > button:active p,
-.topbar-nav-buttons .stButton > button:active div,
-.topbar-nav-buttons .stButton > button:active strong,
-.topbar-nav-buttons .stButton > button:active em,
-.topbar-nav-buttons .stButton > button:focus,
-.topbar-nav-buttons .stButton > button:focus *,
-.topbar-nav-buttons .stButton > button:focus span,
-.topbar-nav-buttons .stButton > button:focus p,
-.topbar-nav-buttons .stButton > button:focus div,
-.topbar-nav-buttons .stButton > button:focus strong,
-.topbar-nav-buttons .stButton > button:focus em {
     color: #FFFFFF !important;
 }
 
@@ -867,29 +747,6 @@ st.markdown(f"""
     </div>
 </div>
 """, unsafe_allow_html=True)
-
-# Navigation buttons positioned in topbar using CSS
-st.markdown("""
-<div class="topbar-nav-buttons">
-""", unsafe_allow_html=True)
-
-col1, col2, col3 = st.columns([1, 1, 1])
-with col1:
-    if st.button("📊 Dashboard", key="nav-dashboard", use_container_width=True):
-        st.session_state.current_page = 'dashboard'
-        st.session_state.show_settings = False
-        st.rerun()
-with col2:
-    if st.button("⚙️ Settings", key="nav-settings", use_container_width=True):
-        st.session_state.show_settings = not st.session_state.show_settings
-        st.rerun()
-with col3:
-    if st.button("ℹ️ About", key="nav-about", use_container_width=True):
-        st.session_state.current_page = 'about'
-        st.session_state.show_settings = False
-        st.rerun()
-
-st.markdown("</div>", unsafe_allow_html=True)
 
 # Custom CSS for overall styling
 st.markdown(f"""
@@ -1399,7 +1256,7 @@ if data_loaded and 'error' not in data['current_stats']:
             high_conf = scenarios['high_confidence']
             st.markdown(f"""
             <div class="phase-card {'achieved' if high_conf['target_achieved'] else ''}">
-                <h4>🎯 High Confidence (≥0.4 similarity)</h4>
+                <h4>High Confidence (≥0.4 similarity)</h4>
                 <p><strong>POs to transition:</strong> {high_conf['pos_to_transition']:,}</p>
                 <p><strong>Resulting %:</strong> {high_conf['resulting_percentage']:.1f}%</p>
                 <p><strong>Total small business POs:</strong> {high_conf['resulting_small_business_pos']:,}</p>
@@ -1411,7 +1268,7 @@ if data_loaded and 'error' not in data['current_stats']:
             med_conf = scenarios['medium_confidence']
             st.markdown(f"""
             <div class="phase-card achieved">
-                <h4>📈 Medium Confidence (≥0.2 similarity)</h4>
+                <h4>Medium Confidence (≥0.2 similarity)</h4>
                 <p><strong>POs to transition:</strong> {med_conf['pos_to_transition']:,}</p>
                 <p><strong>Resulting %:</strong> {med_conf['resulting_percentage']:.1f}%</p>
                 <p><strong>Total small business POs:</strong> {med_conf['resulting_small_business_pos']:,}</p>
