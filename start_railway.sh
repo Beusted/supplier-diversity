@@ -10,10 +10,10 @@ if [ -z "$PORT" ]; then
 fi
 
 echo "🚀 Starting Streamlit on port $PORT"
-echo "📄 Using: streamlit_app.py (working version)"
+echo "📄 Using: frontend/main_dashboard.py (modern UI)"
 
-# Start the working Streamlit app
-exec streamlit run streamlit_app.py \
+# Start the modern dashboard UI
+exec streamlit run frontend/main_dashboard.py \
     --server.port $PORT \
     --server.address 0.0.0.0 \
     --server.headless true \
