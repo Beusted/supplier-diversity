@@ -28,6 +28,10 @@ if 'notifications' not in st.session_state:
     st.session_state.notifications = True
 if 'show_settings' not in st.session_state:
     st.session_state.show_settings = False
+if 'show_chatbot' not in st.session_state:
+    st.session_state.show_chatbot = False
+if 'chat_messages' not in st.session_state:
+    st.session_state.chat_messages = []
 
 # Custom CSS with Bootstrap Icons and Cal Poly Colors
 def get_theme_colors():
@@ -35,8 +39,9 @@ def get_theme_colors():
         return {
             'bg_primary': 'linear-gradient(135deg, var(--poly-green) 0%, var(--poly-green-light) 100%)',
             'bg_card': 'transparent',
-            'text_primary': 'var(--white)',
+            'text_primary': '#FFFFFF',
             'text_secondary': 'rgba(255, 255, 255, 0.8)',
+            'text_body': '#FFFFFF',
             'nav_bg': 'rgba(255, 255, 255, 0.1)',
             'modal_bg': 'rgba(21, 71, 52, 0.95)',
             'body_bg': '#154734'
@@ -45,8 +50,9 @@ def get_theme_colors():
         return {
             'bg_primary': 'linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%)',
             'bg_card': 'rgba(255, 255, 255, 0.9)',
-            'text_primary': 'var(--dark-gray)',
+            'text_primary': '#333333',
             'text_secondary': 'rgba(51, 51, 51, 0.8)',
+            'text_body': '#333333',
             'nav_bg': 'rgba(255, 255, 255, 0.9)',
             'modal_bg': 'rgba(248, 249, 250, 0.95)',
             'body_bg': '#f8f9fa'
@@ -269,24 +275,98 @@ st.markdown("""
     .target-number { color: #51cf66; }
     .gap-number { color: #339af0; }
     
+    /* Comprehensive text color coverage for light/dark mode - EXCEPT navigation buttons */
+    p:not(.topbar-nav-buttons p), 
+    div:not(.topbar-nav-buttons div), 
+    span:not(.topbar-nav-buttons span), 
+    li, ul, ol, strong, em, b, i {
+        color: """ + theme['text_body'] + """ !important;
+    }
+    
+    /* Streamlit specific text elements - EXCEPT navigation buttons */
+    .stMarkdown:not(.topbar-nav-buttons .stMarkdown), 
+    .stMarkdown p:not(.topbar-nav-buttons p), 
+    .stMarkdown div:not(.topbar-nav-buttons div), 
+    .stMarkdown span:not(.topbar-nav-buttons span) {
+        color: """ + theme['text_body'] + """ !important;
+    }
+    
+    /* ULTRA-SPECIFIC RULES FOR NAVIGATION BUTTON TEXT - MUST STAY WHITE */
+    .topbar-nav-buttons .stButton > button,
+    .topbar-nav-buttons .stButton > button *,
+    .topbar-nav-buttons .stButton > button span,
+    .topbar-nav-buttons .stButton > button p,
+    .topbar-nav-buttons .stButton > button div {
+        color: #FFFFFF !important;
+    }
+    
+    .topbar-nav-buttons .stButton > button:hover,
+    .topbar-nav-buttons .stButton > button:hover *,
+    .topbar-nav-buttons .stButton > button:hover span,
+    .topbar-nav-buttons .stButton > button:hover p,
+    .topbar-nav-buttons .stButton > button:hover div {
+        color: #FFFFFF !important;
+    }
+    
+    .topbar-nav-buttons .stButton > button:active,
+    .topbar-nav-buttons .stButton > button:active *,
+    .topbar-nav-buttons .stButton > button:active span,
+    .topbar-nav-buttons .stButton > button:active p,
+    .topbar-nav-buttons .stButton > button:active div,
+    .topbar-nav-buttons .stButton > button:focus,
+    .topbar-nav-buttons .stButton > button:focus *,
+    .topbar-nav-buttons .stButton > button:focus span,
+    .topbar-nav-buttons .stButton > button:focus p,
+    .topbar-nav-buttons .stButton > button:focus div {
+        color: #FFFFFF !important;
+    }
+    
+    /* OVERRIDE ANY STREAMLIT DEFAULT BUTTON TEXT COLORS */
+    .stButton > button {
+        color: #FFFFFF !important;
+    }
+    
+    .stButton > button:hover {
+        color: #FFFFFF !important;
+    }
+    
+    .stButton > button:active,
+    .stButton > button:focus {
+        color: #FFFFFF !important;
+    }
+    
+    /* FORCE WHITE TEXT ON ALL BUTTON CHILDREN */
+    .stButton > button * {
+        color: #FFFFFF !important;
+    }
+    
+    .stButton > button:hover * {
+        color: #FFFFFF !important;
+    }
+    
+    .stButton > button:active *,
+    .stButton > button:focus * {
+        color: #FFFFFF !important;
+    }
+    
     .po-stat {
         background: rgba(21, 71, 52, 0.1);
         padding: 1rem;
         border-radius: 8px;
         text-align: center;
         margin: 0.5rem 0;
-        color: var(--mustard-gold-light);
+        color: """ + theme['text_body'] + """;
         backdrop-filter: blur(10px);
         border: 1px solid rgba(196, 146, 20, 0.3);
     }
     
     .po-stat strong {
-        color: var(--white) !important;
+        color: """ + theme['text_primary'] + """ !important;
         font-weight: 800;
     }
     
     .highlight-number {
-        color: var(--mustard-gold-light) !important;
+        color: var(--mustard-gold) !important;
         font-weight: 800 !important;
         font-size: 1.1em;
     }
@@ -295,9 +375,332 @@ st.markdown("""
         color: """ + theme['text_secondary'] + """ !important;
     }
     
-    .success-text { color: var(--mustard-gold-light) !important; }
-    .warning-text { color: #DC143C !important; }
-    .info-text { color: var(--mustard-gold) !important; }
+    /* Phase card text styling */
+    .phase-card, .phase-card p, .phase-card strong {
+        color: """ + theme['text_body'] + """ !important;
+    }
+    
+    /* Success/warning/info text colors adapted for theme */
+    .success-text { 
+        color: """ + ('#51cf66' if st.session_state.dark_mode else '#2d8f47') + """ !important; 
+    }
+    .warning-text { 
+        color: """ + ('#DC143C' if st.session_state.dark_mode else '#c92a2a') + """ !important; 
+    }
+    .info-text { 
+        color: var(--mustard-gold) !important; 
+    }
+    
+    /* Metric cards should always have white text regardless of theme */
+    .metric-card, .metric-card *, .metric-card p, .metric-card div, .metric-card span {
+        color: white !important;
+    }
+    
+    .metric-value, .metric-label {
+        color: white !important;
+    }
+    
+    /* Navigation buttons should ALWAYS have white text regardless of theme */
+    .stButton > button {
+        color: #FFFFFF !important;
+        background-color: var(--mustard-gold) !important;
+        border: none !important;
+        font-weight: 500 !important;
+    }
+    
+    .stButton > button:hover {
+        background-color: var(--mustard-gold-light) !important;
+        color: #FFFFFF !important;
+    }
+    
+    .stButton > button:active, .stButton > button:focus {
+        background-color: var(--poly-green) !important;
+        color: #FFFFFF !important;
+        outline: none !important;
+    }
+    
+    /* Target all navigation and settings buttons specifically with static white text */
+    .topbar-nav-buttons .stButton > button {
+        background-color: var(--mustard-gold) !important;
+        color: #FFFFFF !important;
+        border: none !important;
+        font-weight: 500 !important;
+        padding: 0.5rem 1rem !important;
+        border-radius: 6px !important;
+    }
+    
+    .topbar-nav-buttons .stButton > button:hover {
+        background-color: var(--mustard-gold-light) !important;
+        color: #FFFFFF !important;
+        transform: translateY(-1px) !important;
+        box-shadow: 0 2px 8px rgba(196, 146, 20, 0.3) !important;
+    }
+    
+    .topbar-nav-buttons .stButton > button:active,
+    .topbar-nav-buttons .stButton > button:focus {
+        background-color: var(--poly-green) !important;
+        color: #FFFFFF !important;
+        outline: none !important;
+    }
+    
+    /* Override any theme-based text color changes for navigation buttons */
+    .topbar-nav-buttons .stButton > button,
+    .topbar-nav-buttons .stButton > button *,
+    .topbar-nav-buttons .stButton > button span,
+    .topbar-nav-buttons .stButton > button p {
+        color: #FFFFFF !important;
+    }
+    
+    /* Settings panel buttons with static white text - NO YELLOW HIGHLIGHTS */
+    .stButton > button[kind="secondary"] {
+        background-color: #333333 !important;
+        color: #FFFFFF !important;
+        border: 1px solid #555555 !important;
+    }
+    
+    .stButton > button[kind="secondary"]:hover {
+        background-color: #555555 !important;
+        color: #FFFFFF !important;
+    }
+    
+    /* Specific styling for close settings button with static white text - NO YELLOW HIGHLIGHTS */
+    button[key="close_settings"] {
+        background-color: #333333 !important;
+        color: #FFFFFF !important;
+        border: 1px solid #555555 !important;
+    }
+    
+    button[key="close_settings"]:hover {
+        background-color: #555555 !important;
+        color: #FFFFFF !important;
+    }
+    
+    /* Override any theme changes for close settings button - WHITE TEXT ONLY */
+    button[key="close_settings"],
+    button[key="close_settings"] *,
+    button[key="close_settings"] span,
+    button[key="close_settings"] p {
+        color: #FFFFFF !important;
+    }
+
+/* FINAL OVERRIDE - NAVIGATION BUTTONS MUST BE WHITE - MAXIMUM PRIORITY */
+.stButton > button,
+.stButton > button *,
+.stButton > button span,
+.stButton > button p,
+.stButton > button div,
+.stButton > button strong,
+.stButton > button em {
+    color: #FFFFFF !important;
+}
+
+.stButton > button:hover,
+.stButton > button:hover *,
+.stButton > button:hover span,
+.stButton > button:hover p,
+.stButton > button:hover div,
+.stButton > button:hover strong,
+.stButton > button:hover em {
+    color: #FFFFFF !important;
+}
+
+.stButton > button:active,
+.stButton > button:active *,
+.stButton > button:active span,
+.stButton > button:active p,
+.stButton > button:active div,
+.stButton > button:active strong,
+.stButton > button:active em,
+.stButton > button:focus,
+.stButton > button:focus *,
+.stButton > button:focus span,
+.stButton > button:focus p,
+.stButton > button:focus div,
+.stButton > button:focus strong,
+.stButton > button:focus em {
+    color: #FFFFFF !important;
+}
+
+/* TOPBAR NAVIGATION SPECIFIC - ABSOLUTE PRIORITY */
+.topbar-nav-buttons .stButton > button,
+.topbar-nav-buttons .stButton > button *,
+.topbar-nav-buttons .stButton > button span,
+.topbar-nav-buttons .stButton > button p,
+.topbar-nav-buttons .stButton > button div,
+.topbar-nav-buttons .stButton > button strong,
+.topbar-nav-buttons .stButton > button em {
+    color: #FFFFFF !important;
+}
+
+.topbar-nav-buttons .stButton > button:hover,
+.topbar-nav-buttons .stButton > button:hover *,
+.topbar-nav-buttons .stButton > button:hover span,
+.topbar-nav-buttons .stButton > button:hover p,
+.topbar-nav-buttons .stButton > button:hover div,
+.topbar-nav-buttons .stButton > button:hover strong,
+.topbar-nav-buttons .stButton > button:hover em {
+    color: #FFFFFF !important;
+}
+
+.topbar-nav-buttons .stButton > button:active,
+.topbar-nav-buttons .stButton > button:active *,
+.topbar-nav-buttons .stButton > button:active span,
+.topbar-nav-buttons .stButton > button:active p,
+.topbar-nav-buttons .stButton > button:active div,
+.topbar-nav-buttons .stButton > button:active strong,
+.topbar-nav-buttons .stButton > button:active em,
+.topbar-nav-buttons .stButton > button:focus,
+.topbar-nav-buttons .stButton > button:focus *,
+.topbar-nav-buttons .stButton > button:focus span,
+.topbar-nav-buttons .stButton > button:focus p,
+.topbar-nav-buttons .stButton > button:focus div,
+.topbar-nav-buttons .stButton > button:focus strong,
+.topbar-nav-buttons .stButton > button:focus em {
+    color: #FFFFFF !important;
+}
+
+/* CHATBOT BUTTON - YELLOW CIRCLE WITH GREEN DUCK */
+.chatbot-button {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #FFD700 0%, #FFC107 100%);
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(255, 215, 0, 0.4);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.chatbot-button:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 25px rgba(255, 215, 0, 0.6);
+}
+
+.chatbot-button:active {
+    transform: scale(0.95);
+}
+
+/* GREEN DUCK EMOJI */
+.duck-emoji {
+    font-size: 28px;
+    line-height: 1;
+}
+
+/* CHATBOT MODAL */
+.chatbot-modal {
+    position: fixed;
+    bottom: 100px;
+    right: 30px;
+    width: 350px;
+    height: 500px;
+    background: """ + theme['bg_card'] + """;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    z-index: 1001;
+    display: flex;
+    flex-direction: column;
+    border: 2px solid var(--mustard-gold);
+    backdrop-filter: blur(10px);
+}
+
+.chatbot-header {
+    background: linear-gradient(135deg, var(--mustard-gold) 0%, var(--mustard-gold-light) 100%);
+    color: white;
+    padding: 15px 20px;
+    border-radius: 13px 13px 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 600;
+}
+
+.chatbot-close {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 50%;
+    transition: background 0.3s ease;
+}
+
+.chatbot-close:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.chatbot-messages {
+    flex: 1;
+    padding: 15px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.chat-message {
+    max-width: 80%;
+    padding: 10px 15px;
+    border-radius: 15px;
+    word-wrap: break-word;
+}
+
+.chat-message.user {
+    background: var(--mustard-gold);
+    color: white;
+    align-self: flex-end;
+    border-bottom-right-radius: 5px;
+}
+
+.chat-message.bot {
+    background: """ + theme['text_secondary'] + """;
+    color: """ + theme['text_primary'] + """;
+    align-self: flex-start;
+    border-bottom-left-radius: 5px;
+}
+
+.chatbot-input {
+    padding: 15px;
+    border-top: 1px solid rgba(196, 146, 20, 0.3);
+    display: flex;
+    gap: 10px;
+}
+
+.chatbot-input input {
+    flex: 1;
+    padding: 10px 15px;
+    border: 1px solid rgba(196, 146, 20, 0.3);
+    border-radius: 20px;
+    background: """ + theme['bg_card'] + """;
+    color: """ + theme['text_primary'] + """;
+    outline: none;
+}
+
+.chatbot-input input:focus {
+    border-color: var(--mustard-gold);
+}
+
+.chatbot-send {
+    background: var(--mustard-gold);
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background 0.3s ease;
+}
+
+.chatbot-send:hover {
+    background: var(--mustard-gold-light);
+}
     
     .section-icon {
         font-size: 1.2rem;
@@ -387,9 +790,204 @@ if st.session_state.show_settings:
             st.session_state.notifications = notifications
             st.rerun()
     
-    if st.button("Close Settings", key="close_settings"):
+    if st.button("Close Settings", key="close_settings", type="secondary"):
         st.session_state.show_settings = False
         st.rerun()
+
+# Chatbot Interface
+def get_chatbot_response(user_message):
+    """Simple chatbot responses for procurement questions"""
+    user_message_lower = user_message.lower()
+    
+    if any(word in user_message_lower for word in ['hello', 'hi', 'hey', 'greetings']):
+        return "🦆 Quack! Hello there! I'm Quack, your procurement assistant. I'm here to help you with questions about small business procurement, supplier diversity, and the dashboard data. What would you like to know?"
+    
+    elif any(word in user_message_lower for word in ['help', 'what can you do', 'assistance']):
+        return "🦆 I can help you with:\n• Understanding the dashboard metrics\n• Explaining procurement strategies\n• Small business certification questions\n• Supplier transition recommendations\n• Implementation planning guidance\n\nJust ask me anything about procurement!"
+    
+    elif any(word in user_message_lower for word in ['25%', 'target', 'goal']):
+        return "🦆 The 25% target means that 25% of all Purchase Orders (POs) should go to small businesses. Currently, we're at 16.3%, so we need to transition 110 more POs to reach our goal. The dashboard shows exactly which suppliers and POs would be best to transition!"
+    
+    elif any(word in user_message_lower for word in ['small business', 'certification', 'qualify']):
+        return "🦆 Small businesses are typically defined as companies with fewer than 500 employees (varies by industry). They need proper certification through programs like SBA 8(a), HUBZone, WOSB, or VOSB. The dashboard helps identify which current suppliers could be replaced with certified small businesses!"
+    
+    elif any(word in user_message_lower for word in ['similarity', 'matching', 'algorithm']):
+        return "🦆 Our AI uses similarity algorithms to match current suppliers with small businesses based on their services and descriptions. Higher similarity scores (0.4+) mean safer transitions, while lower scores need more evaluation. It's like finding suppliers that do very similar work!"
+    
+    elif any(word in user_message_lower for word in ['implementation', 'phases', 'plan']):
+        return "🦆 The phased approach starts with high-confidence matches (40%+ similarity) for quick wins, then expands to medium-confidence matches. This minimizes risk while steadily increasing your small business percentage. Think of it as a step-by-step roadmap!"
+    
+    elif any(word in user_message_lower for word in ['dashboard', 'charts', 'data']):
+        return "🦆 The dashboard shows your current state (16.3%), target (25%), and exactly what needs to change (110 POs). The charts help visualize progress, and the tables show specific recommendations. Everything is designed to make complex procurement data easy to understand!"
+    
+    elif any(word in user_message_lower for word in ['thank', 'thanks', 'appreciate']):
+        return "🦆 You're very welcome! I'm always here to help with your procurement questions. Feel free to ask me anything else about supplier diversity or the dashboard data. Quack quack! 🦆"
+    
+    elif any(word in user_message_lower for word in ['bye', 'goodbye', 'see you']):
+        return "🦆 Goodbye! Remember, every PO transitioned to a small business makes a difference. Keep up the great work on supplier diversity! Quack! 🦆"
+    
+    else:
+        return f"🦆 Quack! That's an interesting question about '{user_message}'. While I'm still learning, I can help with procurement basics, dashboard explanations, and small business supplier strategies. Could you rephrase your question or ask about something specific like targets, matching, or implementation plans?"
+
+# ONLY YELLOW TOGGLE CHAT BUTTON - Bottom-right sticky with all functionality
+st.markdown("""
+<div id="bottom-right-anchor" style="
+    position: fixed; 
+    bottom: 30px; 
+    right: 30px; 
+    z-index: 9999;
+    width: 120px;
+    height: 50px;
+">
+    <button id="duck-toggle-btn" onclick="toggleYellowChatbot()" style="
+        width: 100%;
+        height: 100%;
+        border-radius: 25px;
+        background: linear-gradient(135deg, #FFD700 0%, #FFC107 100%);
+        border: none;
+        font-size: 16px;
+        font-weight: 600;
+        color: #333333;
+        cursor: pointer;
+        box-shadow: 0 4px 20px rgba(255, 215, 0, 0.4);
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    ">
+        🦆 Toggle Chat
+    </button>
+</div>
+
+<script>
+function toggleYellowChatbot() {
+    // Find the hidden Streamlit button for yellow toggle and click it
+    const hiddenBtn = document.querySelector('button[key="yellow_toggle_only"]');
+    if (hiddenBtn) {
+        hiddenBtn.click();
+    }
+}
+</script>
+
+<style>
+#duck-toggle-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 25px rgba(255, 215, 0, 0.6);
+    background: linear-gradient(135deg, #FFE135 0%, #FFD700 100%);
+}
+
+#duck-toggle-btn:active {
+    transform: scale(0.98);
+}
+
+/* Hide the hidden Streamlit button completely */
+button[key="yellow_toggle_only"] {
+    display: none !important;
+    visibility: hidden !important;
+    position: absolute !important;
+    top: -9999px !important;
+}
+
+.stButton:has(button[key="yellow_toggle_only"]) {
+    display: none !important;
+    visibility: hidden !important;
+    position: absolute !important;
+    top: -9999px !important;
+}
+</style>
+""", unsafe_allow_html=True)
+
+# ONLY HIDDEN BUTTON - All toggle functionality consolidated here
+if st.button("🦆 Yellow Toggle Only", key="yellow_toggle_only", help="Toggle Quack Chat"):
+    st.session_state.show_chatbot = not st.session_state.show_chatbot
+    st.rerun()
+
+# Chatbot Modal - Completely self-contained with internal text input
+if st.session_state.show_chatbot:
+    # Initialize with welcome message if empty
+    if not st.session_state.chat_messages:
+        st.session_state.chat_messages.append({
+            "role": "bot", 
+            "content": "🦆 Quack! Hello! I'm your procurement assistant. Ask me about supplier diversity, the dashboard data, or small business procurement strategies!"
+        })
+    
+    st.markdown(f"""
+    <div class="chatbot-modal">
+        <div class="chatbot-header">
+            <div>
+                <span>🦆 Quack - Procurement Assistant</span>
+            </div>
+            <button class="chatbot-close" onclick="document.querySelector('button[key=\\"yellow_toggle_only\\"]').click()">×</button>
+        </div>
+        <div class="chatbot-messages" id="chat-messages">
+    """, unsafe_allow_html=True)
+    
+    # Display all chat messages within the modal
+    for message in st.session_state.chat_messages:
+        if message["role"] == "user":
+            st.markdown(f'<div class="chat-message user">{message["content"]}</div>', unsafe_allow_html=True)
+        else:
+            st.markdown(f'<div class="chat-message bot">{message["content"]}</div>', unsafe_allow_html=True)
+    
+    st.markdown('</div>', unsafe_allow_html=True)
+    
+    # Self-contained text input area ONLY within the modal
+    st.markdown('<div class="chatbot-input-area">', unsafe_allow_html=True)
+    
+    # Create the text input and send functionality within the modal
+    with st.container():
+        # Text input for user queries - ONLY appears in the modal
+        user_message = st.text_input(
+            "Ask Quack anything about procurement:",
+            key="quack_chat_input_internal",
+            placeholder="Type your question here...",
+            label_visibility="collapsed"
+        )
+        
+        # Send button - ONLY within the modal
+        if st.button("Send to Quack 🦆", key="send_quack_message", use_container_width=True, type="primary"):
+            if user_message and user_message.strip():
+                # Add user message to chat
+                st.session_state.chat_messages.append({
+                    "role": "user",
+                    "content": user_message.strip()
+                })
+                
+                # Get Quack's response
+                bot_response = get_chatbot_response(user_message.strip())
+                st.session_state.chat_messages.append({
+                    "role": "bot",
+                    "content": bot_response
+                })
+                
+                # Clear the input and refresh
+                st.session_state.quack_chat_input_internal = ""
+                st.rerun()
+    
+    st.markdown('</div>', unsafe_allow_html=True)  # Close input area
+    st.markdown('</div>', unsafe_allow_html=True)  # Close modal
+
+# FINAL OVERRIDE - CLEAN UP - No longer needed since we only have yellow button
+st.markdown(f"""
+<style>
+    /* CHATBOT MODAL POSITIONING */
+    .chatbot-modal {{
+        position: fixed !important;
+        bottom: 90px !important;
+        right: 30px !important;
+        width: 350px !important;
+        height: 500px !important;
+        background: {theme['bg_card']} !important;
+        border-radius: 15px !important;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3) !important;
+        z-index: 10000 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        border: 2px solid var(--mustard-gold) !important;
+        backdrop-filter: blur(10px) !important;
+    }}
+</style>
+""", unsafe_allow_html=True)
 
 # About Page Content
 def render_about_page():
@@ -538,30 +1136,39 @@ if data_loaded and 'error' not in data['current_stats']:
         st.plotly_chart(fig_current, use_container_width=True)
     
     with col2:
-        # Target PO distribution pie chart
-        target_data = {
-            'Type': ['Small Business POs (Target)', 'Other POs'],
-            'Count': [current_stats['target_pos_needed'], 
-                     current_stats['total_pos'] - current_stats['target_pos_needed']],
-            'Percentage': [25.0, 75.0]
-        }
+        # Optimal Path to Exactly 25% (moved from scenarios section)
+        st.markdown("### 🎯 Optimal Path to Exactly 25%")
         
-        fig_target = px.pie(
-            values=target_data['Count'],
-            names=target_data['Type'],
-            title="Target PO Distribution (25% Small Business)",
-            color_discrete_map={
-                'Small Business POs (Target)': '#51cf66',
-                'Other POs': '#CCCCCC'
-            }
-        )
-        fig_target.update_layout(
-            font=dict(color=theme['text_primary']),
-            paper_bgcolor='rgba(0,0,0,0)',
-            plot_bgcolor='rgba(0,0,0,0)',
-            title_font_color=theme['text_primary']
-        )
-        st.plotly_chart(fig_target, use_container_width=True)
+        if 'error' not in data['optimization_plan']:
+            opt_plan = data['optimization_plan']
+            optimal = opt_plan['optimal_path']
+            
+            if optimal.get('target_achieved', False):
+                st.markdown(f"""
+                <div class="metric-card target" style="margin-bottom: 1rem;">
+                    <div class="metric-value">{optimal['pos_to_transition']:,}</div>
+                    <div class="metric-label">POs Need to Transition</div>
+                </div>
+                """, unsafe_allow_html=True)
+                
+                st.markdown(f"""
+                <div class="metric-card gap" style="margin-bottom: 1rem;">
+                    <div class="metric-value">{optimal.get('avg_similarity_score', 0):.3f}</div>
+                    <div class="metric-label">Average Similarity Score</div>
+                </div>
+                """, unsafe_allow_html=True)
+                
+                st.markdown("**Strategic Approach:**")
+                st.markdown(f"• Transition **{optimal['pos_to_transition']:,} purchase orders** from current suppliers")
+                st.markdown(f"• Achieve exactly **{optimal['resulting_percentage']:.1f}%** small business POs")
+                st.markdown(f"• Average match quality: **{optimal.get('avg_similarity_score', 0):.1%}** similarity")
+                st.markdown("• Focus on highest similarity matches first")
+            else:
+                st.warning(f"⚠️ {optimal.get('message', 'Cannot reach 25% with available matches')}")
+                if 'shortfall' in optimal:
+                    st.markdown(f"**Gap:** Need {optimal['shortfall']:,} more potential matches to reach 25%")
+        else:
+            st.info("📊 Optimal path analysis requires scenario data to be available")
     
     st.markdown('</div>', unsafe_allow_html=True)
     
@@ -611,39 +1218,6 @@ if data_loaded and 'error' not in data['current_stats']:
                 <p style="color: #51cf66;"><strong>✅ MAXIMUM POTENTIAL!</strong></p>
             </div>
             """, unsafe_allow_html=True)
-        
-        # Optimal Path
-        st.markdown("### Optimal Path to Exactly 25%")
-        optimal = opt_plan['optimal_path']
-        
-        if optimal.get('target_achieved', False):
-            col1, col2 = st.columns(2)
-            
-            with col1:
-                st.markdown(f"""
-                <div class="metric-card target">
-                    <div class="metric-value">{optimal['pos_to_transition']:,}</div>
-                    <div class="metric-label">POs Need to Transition</div>
-                </div>
-                """, unsafe_allow_html=True)
-                
-                st.markdown(f"""
-                <div class="metric-card gap">
-                    <div class="metric-value">{optimal.get('avg_similarity_score', 0):.3f}</div>
-                    <div class="metric-label">Average Similarity Score</div>
-                </div>
-                """, unsafe_allow_html=True)
-            
-            with col2:
-                st.markdown("**What this means:**")
-                st.markdown(f"- Transition **{optimal['pos_to_transition']:,} purchase orders** from current suppliers to small businesses")
-                st.markdown(f"- This will achieve exactly **{optimal['resulting_percentage']:.1f}%** small business POs")
-                st.markdown(f"- Average match quality: **{optimal.get('avg_similarity_score', 0):.1%}** similarity")
-                st.markdown("- Focus on highest similarity matches first for best results")
-        else:
-            st.warning(f"{optimal.get('message', 'Cannot reach 25% with available matches')}")
-            if 'shortfall' in optimal:
-                st.markdown(f"**Shortfall:** Need {optimal['shortfall']:,} more potential matches to reach 25%")
         
         st.markdown('</div>', unsafe_allow_html=True)
     
