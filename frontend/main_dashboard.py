@@ -35,8 +35,8 @@ except ImportError as e:
 
 # Page configuration
 st.set_page_config(
-    page_title="Small Business PO Percentage Target Dashboard",
-    page_icon="📋",
+    page_title="Duckling Dashboard",
+    page_icon="🦆",
     layout="wide",
     initial_sidebar_state="collapsed"
 )
@@ -623,6 +623,104 @@ st.markdown("""
     line-height: 1;
 }
 
+/* CONTAINED CHATBOT INTERFACE */
+.chat-container {
+    background: """ + theme['bg_card'] + """;
+    border-radius: 15px;
+    border: 2px solid var(--mustard-gold);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+    margin: 1rem 0;
+    overflow: hidden;
+    max-height: 500px;
+    height: 500px;
+    display: flex;
+    flex-direction: column;
+}
+
+.chat-header {
+    background: linear-gradient(135deg, var(--mustard-gold) 0%, var(--mustard-gold-light) 100%);
+    color: white;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 600;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+}
+
+.chat-messages-container {
+    flex: 1;
+    height: 350px;
+    max-height: 350px;
+    overflow-y: auto;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background: """ + theme['bg_card'] + """;
+}
+
+.chat-message {
+    max-width: 80%;
+    padding: 12px 16px;
+    border-radius: 15px;
+    word-wrap: break-word;
+    line-height: 1.4;
+}
+
+.chat-message.user {
+    background: var(--mustard-gold);
+    color: white;
+    align-self: flex-end;
+    border-bottom-right-radius: 5px;
+    font-weight: 500;
+}
+
+.chat-message.bot {
+    background: rgba(196, 146, 20, 0.1);
+    color: """ + theme['text_primary'] + """;
+    align-self: flex-start;
+    border-bottom-left-radius: 5px;
+    border: 1px solid rgba(196, 146, 20, 0.2);
+}
+
+.chat-input-container {
+    padding: 15px;
+    border-top: 1px solid rgba(196, 146, 20, 0.3);
+    background: """ + theme['bg_card'] + """;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.chat-input-form {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+/* Custom scrollbar for chat messages */
+.chat-messages-container::-webkit-scrollbar {
+    width: 6px;
+}
+
+.chat-messages-container::-webkit-scrollbar-track {
+    background: rgba(196, 146, 20, 0.1);
+    border-radius: 3px;
+}
+
+.chat-messages-container::-webkit-scrollbar-thumb {
+    background: var(--mustard-gold);
+    border-radius: 3px;
+}
+
+.chat-messages-container::-webkit-scrollbar-thumb:hover {
+    background: var(--mustard-gold-light);
+}
+
 /* CHATBOT MODAL */
 .chatbot-modal {
     position: fixed;
@@ -765,7 +863,7 @@ st.markdown(f"""
 <div class="topbar">
     <div class="topbar-title">
         <i class="bi bi-building"></i>
-        PO Diversity Dashboard
+        Duckling Dashboard
     </div>
 </div>
 """, unsafe_allow_html=True)
@@ -962,7 +1060,7 @@ if st.button("🦆 Toggle Chat", key="chatbot_toggle_main", help="Toggle Chat"):
     st.session_state.show_chatbot = not st.session_state.show_chatbot
     st.rerun()
 
-# Simple Chatbot Interface (no popup)
+# Simple Chatbot Interface with Fixed Height Container
 if st.session_state.show_chatbot:
     st.markdown("---")
     st.markdown("### 🦆 Quack - Procurement Assistant")
@@ -974,22 +1072,84 @@ if st.session_state.show_chatbot:
             "content": "🦆 Quack! Hello! I'm Quack, your procurement assistant powered by Claude AI. I specialize in supplier diversity and can help you with:\n\n• **Supplier matching** - Find diverse suppliers for your needs\n• **25% small business targets** - Track and achieve your goals\n• **Procurement strategies** - Optimize your sourcing approach\n• **Dashboard insights** - Understand your diversity metrics\n\nWhat can I help you with today?"
         }]
     
-    # Display chat messages
-    for message in st.session_state.chat_messages:
-        if message["role"] == "user":
-            st.markdown(f"**You:** {message['content']}")
-        else:
-            st.markdown(f"**Quack:** {message['content']}")
+    # Create a container with fixed height for chat messages
+    with st.container():
+        # Add a unique ID to make scrolling more reliable
+        chat_container_id = "chat-messages-container"
+        
+        # Display chat messages in a simple scrollable area with unique ID
+        chat_html = f'<div id="{chat_container_id}" style="height: 300px; overflow-y: auto; border: 2px solid #ffc72c; border-radius: 10px; padding: 15px; background: rgba(255, 255, 255, 0.1); margin-bottom: 20px;">'
+        
+        for i, message in enumerate(st.session_state.chat_messages):
+            if message["role"] == "user":
+                chat_html += f'<div style="text-align: right; margin: 10px 0;"><div style="display: inline-block; background: #ffc72c; color: white; padding: 10px 15px; border-radius: 15px; max-width: 80%;"><strong>You:</strong> {message["content"]}</div></div>'
+            else:
+                chat_html += f'<div style="text-align: left; margin: 10px 0;"><div style="display: inline-block; background: rgba(255, 255, 255, 0.2); color: white; padding: 10px 15px; border-radius: 15px; max-width: 80%;"><strong>Quack:</strong> {message["content"]}</div></div>'
+        
+        # Add an invisible anchor at the bottom
+        chat_html += '<div id="chat-bottom-anchor"></div>'
+        chat_html += '</div>'
+        
+        st.markdown(chat_html, unsafe_allow_html=True)
+        
+        # More aggressive auto-scroll approach
+        st.markdown(f"""
+        <script>
+        function scrollChatToBottom() {{
+            try {{
+                // Try multiple methods to find and scroll the container
+                var container = document.getElementById('{chat_container_id}');
+                if (container) {{
+                    container.scrollTop = container.scrollHeight;
+                    return;
+                }}
+                
+                // Fallback: find by style attribute
+                var containers = document.querySelectorAll('div[style*="height: 300px"]');
+                for (var i = 0; i < containers.length; i++) {{
+                    if (containers[i].style.overflowY === 'auto') {{
+                        containers[i].scrollTop = containers[i].scrollHeight;
+                        break;
+                    }}
+                }}
+                
+                // Another fallback: scroll to bottom anchor
+                var anchor = document.getElementById('chat-bottom-anchor');
+                if (anchor) {{
+                    anchor.scrollIntoView({{ behavior: 'smooth', block: 'end' }});
+                }}
+            }} catch (e) {{
+                console.log('Scroll error:', e);
+            }}
+        }}
+        
+        // Multiple attempts to ensure scrolling works
+        setTimeout(scrollChatToBottom, 50);
+        setTimeout(scrollChatToBottom, 200);
+        setTimeout(scrollChatToBottom, 500);
+        
+        // Also try when DOM content changes
+        if (window.MutationObserver) {{
+            var observer = new MutationObserver(function(mutations) {{
+                setTimeout(scrollChatToBottom, 100);
+            }});
+            observer.observe(document.body, {{ childList: true, subtree: true }});
+        }}
+        </script>
+        """, unsafe_allow_html=True)
     
     # Use a form to handle Enter key functionality properly
     with st.form(key="chat_form", clear_on_submit=True):
-        col1, col2 = st.columns([4, 1])
+        col1, col2, col3 = st.columns([4, 1, 1])
         
         with col1:
             user_input = st.text_input("Ask me anything:", placeholder="E.g., How can I improve my supplier diversity?", label_visibility="collapsed")
         
         with col2:
             send_clicked = st.form_submit_button("Send 🦆")
+        
+        with col3:
+            clear_clicked = st.form_submit_button("Clear")
     
     # Process the message if form was submitted
     if send_clicked and user_input:
@@ -1031,7 +1191,8 @@ if st.session_state.show_chatbot:
         
         st.rerun()
     
-    if st.button("Clear Chat", key="clear_simple_chat"):
+    # Handle clear button
+    if clear_clicked:
         st.session_state.chat_messages = []
         st.rerun()
 
