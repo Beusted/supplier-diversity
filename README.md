@@ -1,4 +1,4 @@
-# Small Business Supplier Diversity Dashboard
+# [Small Business Supplier Diversity Dashboard](https://linktr.ee/whyoho)
 
 ## Overview
 The Small Business Supplier Diversity Dashboard is an innovative AI-powered analytics platform designed to help organizations achieve their small business procurement goals. It leverages machine learning algorithms and data analytics to analyze current procurement patterns, identify gaps, and provide actionable recommendations for transitioning purchase orders to small businesses. The dashboard specifically focuses on reaching the 25% small business procurement target through data-driven insights and strategic planning.
