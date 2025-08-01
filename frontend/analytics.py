@@ -22,6 +22,13 @@ class POQuantityAnalytics:
         except FileNotFoundError:
             return pd.DataFrame()
     
+    def load_small_business_contacts(self) -> pd.DataFrame:
+        """Load small business contact information"""
+        try:
+            return pd.read_csv(self.backend_dir / "small_business_contacts.csv")
+        except FileNotFoundError:
+            return pd.DataFrame()
+    
     def calculate_current_po_percentage(self) -> Dict:
         """Calculate current small business PO percentage (by quantity, not amount)"""
         test_results = self.load_test_results()
@@ -234,6 +241,7 @@ class POQuantityAnalytics:
     def get_quick_wins_by_po_impact(self, limit: int = 15) -> List[Dict]:
         """Get quick wins prioritized by PO transition impact"""
         detailed_analysis = self.load_detailed_analysis()
+        contacts = self.load_small_business_contacts()
         
         if detailed_analysis.empty:
             return []
@@ -254,6 +262,29 @@ class POQuantityAnalytics:
         
         quick_wins = detailed_analysis.nlargest(limit, 'PO_Impact_Score')
         
-        return quick_wins[['Current_Supplier', 'Small_Business', 'Purchase_Amount', 
-                          'Similarity_Score', 'Business_Category', 'Supplier_PO_Count',
-                          'PO_Impact_Score']].to_dict('records')
+        # Merge with contact information
+        if not contacts.empty:
+            quick_wins = quick_wins.merge(
+                contacts, 
+                left_on='Small_Business', 
+                right_on='business_name', 
+                how='left'
+            )
+            # Create a combined contact column showing both email and phone
+            quick_wins['Contact_Info'] = quick_wins.apply(
+                lambda row: f"{row.get('contact_email', 'N/A')} | {row.get('contact_phone', 'N/A')}" 
+                if pd.notna(row.get('contact_email')) else 'Contact info not available',
+                axis=1
+            )
+            
+            return quick_wins[['Current_Supplier', 'Small_Business', 'Contact_Info', 'Purchase_Amount', 
+                              'Similarity_Score', 'Business_Category', 'Supplier_PO_Count',
+                              'PO_Impact_Score', 'contact_person']].to_dict('records')
+        else:
+            # If no contact data available, add placeholder
+            quick_wins['Contact_Info'] = 'Contact info not available'
+            quick_wins['contact_person'] = 'N/A'
+            
+            return quick_wins[['Current_Supplier', 'Small_Business', 'Contact_Info', 'Purchase_Amount', 
+                              'Similarity_Score', 'Business_Category', 'Supplier_PO_Count',
+                              'PO_Impact_Score', 'contact_person']].to_dict('records')

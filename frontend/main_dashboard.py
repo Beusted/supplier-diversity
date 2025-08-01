@@ -1393,7 +1393,7 @@ if data_loaded and 'error' not in data['current_stats']:
         
         scenarios = opt_plan['scenarios']
         
-        col1, col2, col3 = st.columns(3)
+        col1, col2 = st.columns(2)
         
         with col1:
             high_conf = scenarios['high_confidence']
@@ -1416,18 +1416,6 @@ if data_loaded and 'error' not in data['current_stats']:
                 <p><strong>Resulting %:</strong> {med_conf['resulting_percentage']:.1f}%</p>
                 <p><strong>Total small business POs:</strong> {med_conf['resulting_small_business_pos']:,}</p>
                 <p style="color: #51cf66;"><strong>TARGET EXCEEDED!</strong></p>
-            </div>
-            """, unsafe_allow_html=True)
-        
-        with col3:
-            all_matches = scenarios['all_matches']
-            st.markdown(f"""
-            <div class="phase-card achieved">
-                <h4>🔄 All Available Matches</h4>
-                <p><strong>POs to transition:</strong> {all_matches['pos_to_transition']:,}</p>
-                <p><strong>Resulting %:</strong> {all_matches['resulting_percentage']:.1f}%</p>
-                <p><strong>Total small business POs:</strong> {all_matches['resulting_small_business_pos']:,}</p>
-                <p style="color: #51cf66;"><strong>✅ MAXIMUM POTENTIAL!</strong></p>
             </div>
             """, unsafe_allow_html=True)
         
@@ -1511,7 +1499,9 @@ if data_loaded and 'error' not in data['current_stats']:
                 'Similarity_Score': 'Similarity Score',
                 'Business_Category': 'Category',
                 'Supplier_PO_Count': 'Supplier Total POs',
-                'PO_Impact_Score': 'Impact Score'
+                'PO_Impact_Score': 'Impact Score',
+                'Contact_Info': 'Contact Information',
+                'contact_person': 'Contact Person'
             }),
             use_container_width=True,
             hide_index=True,
@@ -1527,6 +1517,16 @@ if data_loaded and 'error' not in data['current_stats']:
                     help="Combined similarity and strategic impact score",
                     min_value=0,
                     max_value=1,
+                ),
+                "Contact Information": st.column_config.TextColumn(
+                    "Contact Information",
+                    help="Email and phone number for the small business",
+                    width="medium",
+                ),
+                "Contact Person": st.column_config.TextColumn(
+                    "Contact Person",
+                    help="Primary contact person at the small business",
+                    width="small",
                 ),
             }
         )
