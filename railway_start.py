@@ -10,9 +10,9 @@ def main():
     # Get port from environment or default to 8080
     port = os.environ.get('PORT', '8080')
     
-    # Streamlit command with Railway-specific settings
+    # Streamlit command with Railway-specific settings - using original dashboard
     cmd = [
-        'streamlit', 'run', 'streamlit_app.py',
+        'streamlit', 'run', 'frontend/main_dashboard.py',
         '--server.port', port,
         '--server.address', '0.0.0.0',
         '--server.headless', 'true',
@@ -23,6 +23,7 @@ def main():
     ]
     
     print(f"Starting Streamlit on port {port}")
+    print(f"Using original dashboard: frontend/main_dashboard.py")
     print(f"Command: {' '.join(cmd)}")
     
     # Start Streamlit
