@@ -835,13 +835,55 @@ def get_current_dashboard_context():
 
 def get_fallback_chatbot_response(user_message):
     """Fallback chatbot responses when AI is not available"""
-    user_message_lower = user_message.lower()
+    user_message_lower = user_message.lower().strip()
     
-    if any(word in user_message_lower for word in ['hello', 'hi', 'hey', 'greetings']):
-        return "🤖 Hello! I'm your AI-powered supplier diversity assistant. I can help analyze your procurement data, track progress toward diversity targets, and provide recommendations. What would you like to know?"
+    # Handle diversity percentage questions with actual data - be very specific
+    diversity_patterns = [
+        'diversity percentage', 'diversity %', 'small business percentage',
+        'what is our diversity', 'whats our diversity', 'current diversity',
+        'procurement percentage', 'supplier diversity percentage',
+        'our diversity percentage', 'current small business percentage'
+    ]
     
-    elif any(word in user_message_lower for word in ['help', 'what can you do', 'capabilities']):
-        return """🤖 I can help you with:
+    # Check if any diversity pattern matches
+    diversity_match = any(phrase in user_message_lower for phrase in diversity_patterns)
+    
+    if diversity_match:
+        try:
+            analytics = POQuantityAnalytics()
+            current_stats = analytics.calculate_current_po_percentage()
+            
+            if 'error' not in current_stats:
+                return f"""🦆 Based on your current dashboard data:
+
+• **Current diversity percentage**: {current_stats['current_percentage']:.1f}%
+• **Target percentage**: {current_stats['target_percentage']:.1f}%
+• **Small business POs**: {current_stats['current_small_business_pos']:,} out of {current_stats['total_pos']:,} total
+• **Gap to close**: {current_stats['gap_percentage']:.1f} percentage points
+• **POs needed**: {current_stats['gap_pos_needed']:,} more POs to reach target
+
+You're currently {current_stats['current_percentage']:.1f}% toward your 25% goal. Keep up the great work!"""
+            else:
+                return "🦆 I'd love to tell you your current diversity percentage, but I'm having trouble accessing the dashboard data right now. Please check that your data files are properly loaded."
+        except Exception as e:
+            return "🦆 I'm having trouble accessing your current diversity data. Please ensure the analytics system is properly configured."
+    
+    # Check if question is procurement-related before responding
+    procurement_keywords = [
+        'procurement', 'supplier', 'diversity', 'small business', 'po', 'purchase order',
+        'target', 'goal', 'analytics', 'dashboard', 'compliance'
+    ]
+    
+    # Check if any procurement keyword matches
+    procurement_match = any(word in user_message_lower for word in procurement_keywords)
+    
+    if procurement_match:
+        # Handle procurement-related questions
+        if any(word in user_message_lower for word in ['hello', 'hi', 'hey', 'greetings']):
+            return "🦆 Hello! I'm Quack, your AI-powered supplier diversity assistant. I can help analyze your procurement data, track progress toward diversity targets, and provide recommendations. What would you like to know?"
+        
+        elif any(word in user_message_lower for word in ['help', 'what can you do', 'capabilities']):
+            return """🦆 I can help you with:
 
 • **PO Analysis**: Track small business percentage and progress toward targets
 • **Gap Analysis**: Calculate how many more POs you need to meet goals  
@@ -850,18 +892,21 @@ def get_fallback_chatbot_response(user_message):
 • **Compliance**: Monitor diversity requirements and reporting
 
 What would you like to explore?"""
+        
+        elif any(word in user_message_lower for word in ['target', 'goal', '25%']):
+            return "🦆 I can help you track progress toward your supplier diversity targets! The typical goal is 25% of POs going to small businesses. I can analyze your current performance, calculate gaps, and suggest strategies to reach your targets."
+        
+        elif any(word in user_message_lower for word in ['small business', 'supplier', 'diversity']):
+            return "🦆 Small business supplier diversity is crucial for economic growth and compliance. I can help identify opportunities to transition to small business suppliers, analyze your current participation rates, and recommend strategies for improvement."
+        
+        elif any(word in user_message_lower for word in ['data', 'analyze', 'analysis', 'insights']):
+            return "🦆 I can provide comprehensive analysis of your procurement data! This includes trend analysis, category breakdowns, supplier performance metrics, and actionable insights to improve your supplier diversity program."
+        
+        else:
+            return "🦆 I'm here to help with supplier diversity and procurement analysis! Ask me about PO percentages, target gaps, supplier recommendations, or data insights. How can I assist you today?"
     
-    elif any(word in user_message_lower for word in ['target', 'goal', '25%', 'percentage']):
-        return "🤖 I can help you track progress toward your supplier diversity targets! The typical goal is 25% of POs going to small businesses. I can analyze your current performance, calculate gaps, and suggest strategies to reach your targets."
-    
-    elif any(word in user_message_lower for word in ['small business', 'supplier', 'diversity']):
-        return "🤖 Small business supplier diversity is crucial for economic growth and compliance. I can help identify opportunities to transition to small business suppliers, analyze your current participation rates, and recommend strategies for improvement."
-    
-    elif any(word in user_message_lower for word in ['data', 'analyze', 'analysis', 'insights']):
-        return "🤖 I can provide comprehensive analysis of your procurement data! This includes trend analysis, category breakdowns, supplier performance metrics, and actionable insights to improve your supplier diversity program."
-    
-    else:
-        return "🤖 I'm here to help with supplier diversity and procurement analysis! Ask me about PO percentages, target gaps, supplier recommendations, or data insights. How can I assist you today?"
+    # For non-procurement questions, simple rejection
+    return "🦆 I can't help you with that."
 
 
 # Tiny Floating Chat Integration
@@ -938,10 +983,16 @@ if st.session_state.show_chatbot:
         chat_html = f'<div id="{chat_container_id}" style="height: 300px; overflow-y: auto; border: 2px solid #ffc72c; border-radius: 10px; padding: 15px; background: rgba(255, 255, 255, 0.1); margin-bottom: 20px;">'
         
         for i, message in enumerate(st.session_state.chat_messages):
+            # Convert newlines to HTML breaks and markdown formatting to HTML
+            formatted_content = message["content"].replace('\n', '<br>')
+            # Convert **text** to <strong>text</strong>
+            import re
+            formatted_content = re.sub(r'\*\*(.*?)\*\*', r'<strong>\1</strong>', formatted_content)
+            
             if message["role"] == "user":
-                chat_html += f'<div style="text-align: right; margin: 10px 0;"><div style="display: inline-block; background: #ffc72c; color: white; padding: 10px 15px; border-radius: 15px; max-width: 80%;"><strong>You:</strong> {message["content"]}</div></div>'
+                chat_html += f'<div style="text-align: right; margin: 10px 0;"><div style="display: inline-block; background: #ffc72c; color: white; padding: 10px 15px; border-radius: 15px; max-width: 80%;"><strong>You:</strong> {formatted_content}</div></div>'
             else:
-                chat_html += f'<div style="text-align: left; margin: 10px 0;"><div style="display: inline-block; background: rgba(255, 255, 255, 0.2); color: white; padding: 10px 15px; border-radius: 15px; max-width: 80%;"><strong>Quack:</strong> {message["content"]}</div></div>'
+                chat_html += f'<div style="text-align: left; margin: 10px 0;"><div style="display: inline-block; background: rgba(255, 255, 255, 0.2); color: white; padding: 10px 15px; border-radius: 15px; max-width: 80%; white-space: normal;"><strong>Quack:</strong> {formatted_content}</div></div>'
         
         # Add an invisible anchor at the bottom
         chat_html += '<div id="chat-bottom-anchor"></div>'
@@ -1019,22 +1070,60 @@ if st.session_state.show_chatbot:
         # Get AI response
         try:
             if CHATBOT_AVAILABLE:
-                # Check if the question is relevant to procurement/supplier diversity
-                relevance_check = f"Is this question related to procurement, supplier diversity, small business, contracting, sourcing, or business operations? Question: '{user_input}'. Answer only 'YES' or 'NO'."
-                relevance_response = get_chatbot_response(relevance_check)
+                # First check if this is a procurement-related question
+                user_message_lower = user_input.lower().strip()
                 
-                if "NO" in relevance_response.upper():
-                    bot_response = f"🦆 Quack! I'm specifically designed to help with procurement and supplier diversity topics. I cannot help you with '{user_input}'. \n\nI'd be happy to assist you with:\n• Supplier diversity strategies\n• Small business procurement goals\n• Dashboard insights and metrics\n• Procurement best practices\n\nWhat procurement-related question can I help you with today?"
+                # Check for procurement relevance
+                procurement_keywords = [
+                    'procurement', 'supplier', 'diversity', 'small business', 'po', 'purchase order',
+                    'target', 'goal', 'analytics', 'dashboard', 'compliance', 'percentage'
+                ]
+                
+                is_procurement_related = any(word in user_message_lower for word in procurement_keywords)
+                
+                if not is_procurement_related:
+                    # Use fallback for non-procurement questions
+                    bot_response = get_fallback_chatbot_response(user_input)
                 else:
-                    # Enhanced context for better responses
-                    context = f"You are Quack, a helpful procurement assistant specializing in supplier diversity. The user asked: '{user_input}'. Provide a helpful, specific response about supplier diversity, procurement strategies, or dashboard insights. Keep responses conversational but informative. Stay focused on procurement topics only."
+                    # Get current dashboard data for context
+                    try:
+                        analytics = POQuantityAnalytics()
+                        current_stats = analytics.calculate_current_po_percentage()
+                        
+                        if 'error' not in current_stats:
+                            data_context = f"""
+Current Dashboard Data:
+- Current small business PO percentage: {current_stats['current_percentage']:.1f}%
+- Target percentage: {current_stats['target_percentage']:.1f}%
+- Total POs: {current_stats['total_pos']:,}
+- Small business POs: {current_stats['current_small_business_pos']:,}
+- POs needed to reach target: {current_stats['gap_pos_needed']:,}
+- Gap to close: {current_stats['gap_percentage']:.1f} percentage points
+"""
+                        else:
+                            data_context = "Dashboard data is currently unavailable."
+                    except Exception:
+                        data_context = "Dashboard data is currently unavailable."
+                    
+                    # Enhanced context for better responses with actual data
+                    context = f"""You are Quack, a helpful procurement assistant specializing in supplier diversity. 
+
+{data_context}
+
+The user asked: '{user_input}'. 
+
+If they're asking about current metrics (like diversity percentage, current status, etc.), provide the specific numbers from the dashboard data above. If they're asking for general advice, provide helpful guidance about supplier diversity strategies.
+
+Keep responses conversational but informative. Stay focused on procurement topics only."""
+                    
                     response = get_chatbot_response(context + " User question: " + user_input)
                     # Clean up response and add Quack personality
                     bot_response = response.replace("🤖 ", "").replace("Claude", "Quack")
                     if not bot_response.startswith("🦆"):
                         bot_response = f"🦆 {bot_response}"
             else:
-                bot_response = "🦆 Quack! I'm currently having trouble connecting to my AI brain. Please make sure the chatbot service is properly configured, and I'll be right back to help with your procurement needs!"
+                # Use fallback when AI is not available
+                bot_response = get_fallback_chatbot_response(user_input)
             
             st.session_state.chat_messages.append({
                 "role": "assistant", 
