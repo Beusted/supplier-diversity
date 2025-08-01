@@ -533,7 +533,7 @@ if data_loaded and 'error' not in data['current_stats']:
     
     # Big Numbers Section - PO Quantities
     st.markdown('<div class="dashboard-card">', unsafe_allow_html=True)
-    st.markdown("## 📊 Purchase Order Percentage Analysis")
+    st.markdown("## Purchase Order Percentage Analysis")
     
     col1, col2, col3 = st.columns(3)
     
@@ -635,7 +635,7 @@ if data_loaded and 'error' not in data['current_stats']:
         opt_plan = data['optimization_plan']
         
         st.markdown('<div class="dashboard-card">', unsafe_allow_html=True)
-        st.markdown("## 🚀 PO Transition Scenarios to Reach 25%")
+        st.markdown("## PO Transition Scenarios to Reach 25%")
         
         scenarios = opt_plan['scenarios']
         
@@ -649,7 +649,7 @@ if data_loaded and 'error' not in data['current_stats']:
                 <p><strong>POs to transition:</strong> {high_conf['pos_to_transition']:,}</p>
                 <p><strong>Resulting %:</strong> {high_conf['resulting_percentage']:.1f}%</p>
                 <p><strong>Total small business POs:</strong> {high_conf['resulting_small_business_pos']:,}</p>
-                {'<p style="color: #51cf66;"><strong>✅ TARGET ACHIEVED!</strong></p>' if high_conf['target_achieved'] else '<p style="color: #ff6b6b;"><strong>❌ Target not reached</strong></p>'}
+                {'<p style="color: #51cf66;"><strong>TARGET ACHIEVED!</strong></p>' if high_conf['target_achieved'] else '<p style="color: #ff6b6b;"><strong>Target not reached</strong></p>'}
             </div>
             """, unsafe_allow_html=True)
         
@@ -661,7 +661,7 @@ if data_loaded and 'error' not in data['current_stats']:
                 <p><strong>POs to transition:</strong> {med_conf['pos_to_transition']:,}</p>
                 <p><strong>Resulting %:</strong> {med_conf['resulting_percentage']:.1f}%</p>
                 <p><strong>Total small business POs:</strong> {med_conf['resulting_small_business_pos']:,}</p>
-                <p style="color: #51cf66;"><strong>✅ TARGET EXCEEDED!</strong></p>
+                <p style="color: #51cf66;"><strong>TARGET EXCEEDED!</strong></p>
             </div>
             """, unsafe_allow_html=True)
         
@@ -715,7 +715,7 @@ if data_loaded and 'error' not in data['current_stats']:
     # Implementation Phases
     if opt_plan.get('implementation_phases'):
         st.markdown('<div class="dashboard-card">', unsafe_allow_html=True)
-        st.markdown("## 📅 Phased Implementation Plan")
+        st.markdown("## Phased Implementation Plan")
         
         phases_df = pd.DataFrame(opt_plan['implementation_phases'])
         
@@ -773,7 +773,7 @@ if data_loaded and 'error' not in data['current_stats']:
     # Quick Wins - PO Focused
     if data['quick_wins']:
         st.markdown('<div class="dashboard-card">', unsafe_allow_html=True)
-        st.markdown("## ⚡ Top PO Transition Opportunities")
+        st.markdown("## Top PO Transition Opportunities")
         
         quick_wins_df = pd.DataFrame(data['quick_wins'])
         quick_wins_df['Purchase_Amount'] = quick_wins_df['Purchase_Amount'].apply(lambda x: f"${x:,.2f}")
@@ -815,7 +815,7 @@ if data_loaded and 'error' not in data['current_stats']:
     # Supplier Transition Analysis
     if 'error' not in data['supplier_analysis']:
         st.markdown('<div class="dashboard-card">', unsafe_allow_html=True)
-        st.markdown("## 🔄 Current Suppliers with Most PO Transition Opportunities")
+        st.markdown("## Current Suppliers with Most PO Transition Opportunities")
         
         supplier_data = data['supplier_analysis']['top_suppliers_by_po_count']
         

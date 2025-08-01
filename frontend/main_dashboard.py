@@ -14,7 +14,7 @@ from analytics import POQuantityAnalytics
 
 # Import chatbot backend modules
 try:
-    from backend.chatbot.chatbot_engine import SupplierDiversityChatbot
+    from backend.chatbot.claude_chatbot_engine import ClaudeSupplierDiversityChatbot
     from backend.chatbot.data_analyzer import ProcurementDataAnalyzer
     from backend.chatbot.response_generator import ResponseGenerator
     CHATBOT_AVAILABLE = True
@@ -25,7 +25,7 @@ except ImportError as e:
         import os
         backend_path = os.path.join(os.path.dirname(__file__), '..', 'backend')
         sys.path.insert(0, backend_path)
-        from chatbot.chatbot_engine import SupplierDiversityChatbot
+        from chatbot.claude_chatbot_engine import ClaudeSupplierDiversityChatbot
         from chatbot.data_analyzer import ProcurementDataAnalyzer
         from chatbot.response_generator import ResponseGenerator
         CHATBOT_AVAILABLE = True
@@ -57,7 +57,7 @@ if 'chat_messages' not in st.session_state:
 
 # Initialize chatbot components
 if 'chatbot_engine' not in st.session_state and CHATBOT_AVAILABLE:
-    st.session_state.chatbot_engine = SupplierDiversityChatbot()
+    st.session_state.chatbot_engine = ClaudeSupplierDiversityChatbot()
 if 'data_analyzer' not in st.session_state and CHATBOT_AVAILABLE:
     st.session_state.data_analyzer = ProcurementDataAnalyzer()
 if 'response_generator' not in st.session_state and CHATBOT_AVAILABLE:
@@ -842,12 +842,8 @@ def get_chatbot_response(user_message):
             # Get comprehensive analysis
             analysis_data = st.session_state.data_analyzer.get_comprehensive_analysis()
             
-            # Use AI-powered response generation
-            if st.session_state.chatbot_engine.is_ai_enabled:
-                response = st.session_state.chatbot_engine.get_response(user_message, context_data)
-            else:
-                # Use intelligent rule-based responses
-                response = st.session_state.response_generator.generate_response(user_message, analysis_data)
+            # Use Claude AI-powered response generation
+            response = st.session_state.chatbot_engine.get_response(user_message, context_data)
         else:
             # Fallback to chatbot engine without specific data
             response = st.session_state.chatbot_engine.get_response(user_message, context_data)
@@ -959,1046 +955,85 @@ try:
     render_floating_chat(dashboard_context)
     
 except ImportError:
-    # Fallback to original chatbot button
-    if st.button("🦆 Toggle Chat", key="chatbot_toggle_main", help="Toggle Quack Chat"):
-        st.session_state.show_chatbot = not st.session_state.show_chatbot
-        st.rerun()
+    pass
 
-# Simple HTML button that works
-st.markdown("""
-<button id="simple-chat-button" style="
-    position: fixed !important;
-    bottom: 90px !important;
-    right: 30px !important;
-    z-index: 2147483646 !important;
-    width: 280px !important;
-    height: 45px !important;
-    background: rgba(255, 255, 255, 0.95) !important;
-    border: 2px solid #FFD700 !important;
-    border-radius: 25px !important;
-    cursor: pointer !important;
-    font-size: 14px !important;
-    font-weight: 500 !important;
-    color: #666 !important;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1) !important;
-    transition: all 0.3s ease !important;
-    backdrop-filter: blur(10px) !important;
-    pointer-events: auto !important;
-" onclick="
-    console.log('Simple button clicked!');
-    const toggleBtn = document.querySelector('button[title=\\'Toggle Quack Chat\\']') || 
-                     Array.from(document.querySelectorAll('button')).find(b => b.textContent.includes('🦆 Toggle Chat'));
-    if (toggleBtn) {
-        console.log('Found toggle button, clicking...');
-        toggleBtn.click();
-    } else {
-        console.log('Toggle button not found, trying page refresh...');
-        window.location.reload();
-    }
-">
-💬 Ask me about supplier diversity...
-</button>
+# Simple Chatbot Toggle Button
+if st.button("🦆 Toggle Chat", key="chatbot_toggle_main", help="Toggle Chat"):
+    st.session_state.show_chatbot = not st.session_state.show_chatbot
+    st.rerun()
 
-<style>
-#simple-chat-button:hover {
-    background: rgba(255, 255, 255, 1) !important;
-    border-color: #FFC107 !important;
-    box-shadow: 0 6px 25px rgba(255, 215, 0, 0.3) !important;
-    transform: translateY(-2px) !important;
-    color: #333 !important;
-}
-</style>
-""", unsafe_allow_html=True)
-
-st.markdown("""
-<style>
-/* STICKY TOGGLE CHAT BUTTON - MAXIMUM SPECIFICITY FOR FIXED POSITIONING */
-html body .stApp .main div[data-testid="stButton"]:has(button[title="Toggle Quack Chat"]),
-html body .stApp .main div[data-testid="stButton"]:has(button:contains("🦆 Toggle Chat")),
-html body .stApp .main .stButton:has(button[title="Toggle Quack Chat"]),
-html body .stApp .main .stButton:has(button:contains("🦆 Toggle Chat")),
-div[data-testid="stButton"]:has(button[title="Toggle Quack Chat"]),
-div[data-testid="stButton"]:has(button:contains("🦆 Toggle Chat")),
-.stButton:has(button[title="Toggle Quack Chat"]),
-.stButton:has(button:contains("🦆 Toggle Chat")) {
-    position: fixed !important;
-    bottom: 30px !important;
-    right: 30px !important;
-    z-index: 2147483647 !important;
-    width: 120px !important;
-    height: 50px !important;
-    top: auto !important;
-    left: auto !important;
-    transform: none !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    pointer-events: auto !important;
-}
-
-/* STICKY TOGGLE CHAT BUTTON STYLING - ULTRA HIGH SPECIFICITY */
-html body .stApp .main button[title="Toggle Quack Chat"],
-html body .stApp .main button:contains("🦆 Toggle Chat"),
-html body .stApp .main div[data-testid="stButton"] button:contains("🦆 Toggle Chat"),
-button[title="Toggle Quack Chat"],
-button:contains("🦆 Toggle Chat"),
-div[data-testid="stButton"] button:contains("🦆 Toggle Chat") {
-    position: fixed !important;
-    bottom: 30px !important;
-    right: 30px !important;
-    z-index: 2147483647 !important;
-    width: 120px !important;
-    height: 50px !important;
-    border-radius: 25px !important;
-    background: linear-gradient(135deg, #FFD700 0%, #FFC107 100%) !important;
-    border: none !important;
-    font-size: 16px !important;
-    font-weight: 600 !important;
-    color: #333333 !important;
-    cursor: pointer !important;
-    box-shadow: 0 4px 20px rgba(255, 215, 0, 0.4) !important;
-    transition: all 0.3s ease !important;
-    top: auto !important;
-    left: auto !important;
-    transform: none !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    pointer-events: auto !important;
-}
-
-/* Hover effects for sticky button */
-button[title="Toggle Quack Chat"]:hover,
-button:contains("🦆 Toggle Chat"):hover {
-    transform: scale(1.05) !important;
-    box-shadow: 0 6px 25px rgba(255, 215, 0, 0.6) !important;
-    background: linear-gradient(135deg, #FFE135 0%, #FFD700 100%) !important;
-    color: #333333 !important;
-    position: fixed !important;
-    bottom: 30px !important;
-    right: 30px !important;
-    z-index: 2147483647 !important;
-}
-
-/* Active effects for sticky button */
-button[title="Toggle Quack Chat"]:active,
-button:contains("🦆 Toggle Chat"):active {
-    transform: scale(0.98) !important;
-    position: fixed !important;
-    bottom: 30px !important;
-    right: 30px !important;
-    z-index: 2147483647 !important;
-}
-
-/* Ensure button stays sticky during scroll events */
-.stApp .main .block-container button:contains("🦆 Toggle Chat"),
-.stApp button:contains("🦆 Toggle Chat") {
-    position: fixed !important;
-    bottom: 30px !important;
-    right: 30px !important;
-    z-index: 2147483647 !important;
-    pointer-events: auto !important;
-}
-
-/* Override any potential interference from Streamlit's default styles */
-[data-testid="stButton"]:has(button:contains("🦆 Toggle Chat")) {
-    position: fixed !important;
-    bottom: 30px !important;
-    right: 30px !important;
-    z-index: 2147483647 !important;
-    width: 120px !important;
-    height: 50px !important;
-}
-
-/* Final fallback - catch any button with duck emoji anywhere in the DOM */
-* button:contains("🦆") {
-    position: fixed !important;
-    bottom: 30px !important;
-    right: 30px !important;
-    z-index: 2147483647 !important;
-    width: 120px !important;
-    height: 50px !important;
-    border-radius: 25px !important;
-    background: linear-gradient(135deg, #FFD700 0%, #FFC107 100%) !important;
-    border: none !important;
-    font-size: 16px !important;
-    font-weight: 600 !important;
-    color: #333333 !important;
-    cursor: pointer !important;
-    box-shadow: 0 4px 20px rgba(255, 215, 0, 0.4) !important;
-    pointer-events: auto !important;
-}
-
-/* STICKY CLICKABLE TEXT BOX FOR CHAT */
-#sticky-chat-textbox {
-    position: fixed !important;
-    bottom: 90px !important;
-    right: 30px !important;
-    z-index: 2147483646 !important;
-    width: 280px !important;
-    height: 45px !important;
-    background: rgba(255, 255, 255, 0.95) !important;
-    border: 2px solid #FFD700 !important;
-    border-radius: 25px !important;
-    cursor: pointer !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: flex-start !important;
-    padding: 0 20px !important;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1) !important;
-    transition: all 0.3s ease !important;
-    backdrop-filter: blur(10px) !important;
-    pointer-events: auto !important;
-}
-
-#sticky-chat-textbox:hover {
-    background: rgba(255, 255, 255, 1) !important;
-    border-color: #FFC107 !important;
-    box-shadow: 0 6px 25px rgba(255, 215, 0, 0.3) !important;
-    transform: translateY(-2px) !important;
-}
-
-#sticky-chat-textbox .chat-prompt {
-    color: #666 !important;
-    font-size: 14px !important;
-    font-weight: 500 !important;
-    user-select: none !important;
-    pointer-events: none !important;
-}
-
-#sticky-chat-textbox:hover .chat-prompt {
-    color: #333 !important;
-}
-
-/* Dark mode styles for the text box */
-.dark-mode #sticky-chat-textbox {
-    background: rgba(45, 45, 45, 0.95) !important;
-    border-color: #FFD700 !important;
-}
-
-.dark-mode #sticky-chat-textbox:hover {
-    background: rgba(55, 55, 55, 1) !important;
-}
-
-.dark-mode #sticky-chat-textbox .chat-prompt {
-    color: #ccc !important;
-}
-
-.dark-mode #sticky-chat-textbox:hover .chat-prompt {
-    color: #fff !important;
-}
-
-/* Hide the hidden trigger button */
-button[title="Hidden button for text box"],
-[data-testid="stButton"]:has(button[title="Hidden button for text box"]) {
-    display: none !important;
-    visibility: hidden !important;
-    position: absolute !important;
-    left: -9999px !important;
-}
-
-/* Alternative approach - target by text content with JavaScript injection */
-div[data-testid="stButton"] {
-    position: relative;
-}
-
-/* Try to catch any button with duck emoji */
-button:contains("🦆") {
-    position: fixed !important;
-    bottom: 30px !important;
-    right: 30px !important;
-    z-index: 9999 !important;
-}
-
-/* CHAT BUTTON STYLING - positioned above the duck button - MAXIMUM SPECIFICITY */
-html body .stApp .main div[data-testid="stButton"]:has(button[title="Open Chat"]),
-html body .stApp .main div[data-testid="stButton"]:has(button:contains("Chat")),
-html body .stApp .main .stButton:has(button[title="Open Chat"]),
-html body .stApp .main .stButton:has(button:contains("Chat")),
-div[data-testid="stButton"]:has(button[title="Open Chat"]),
-div[data-testid="stButton"]:has(button:contains("Chat")),
-.stButton:has(button[title="Open Chat"]),
-.stButton:has(button:contains("Chat")) {
-    position: fixed !important;
-    bottom: 90px !important;
-    right: 30px !important;
-    z-index: 999999 !important;
-    width: 80px !important;
-    height: 40px !important;
-    top: auto !important;
-    left: auto !important;
-    transform: none !important;
-    margin: 0 !important;
-    padding: 0 !important;
-}
-
-/* Style the actual chat button - ULTRA HIGH SPECIFICITY */
-html body .stApp .main button[title="Open Chat"],
-html body .stApp .main button:contains("Chat"):not(:contains("🦆")),
-html body .stApp .main div[data-testid="stButton"] button:contains("Chat"):not(:contains("🦆")),
-button[title="Open Chat"],
-button:contains("Chat"):not(:contains("🦆")),
-div[data-testid="stButton"] button:contains("Chat"):not(:contains("🦆")) {
-    position: fixed !important;
-    bottom: 90px !important;
-    right: 30px !important;
-    z-index: 999999 !important;
-    width: 80px !important;
-    height: 40px !important;
-    border-radius: 20px !important;
-    background: linear-gradient(135deg, var(--mustard-gold) 0%, var(--mustard-gold-light) 100%) !important;
-    border: none !important;
-    font-size: 14px !important;
-    font-weight: 600 !important;
-    color: #FFFFFF !important;
-    cursor: pointer !important;
-    box-shadow: 0 4px 15px rgba(255, 199, 44, 0.4) !important;
-    transition: all 0.3s ease !important;
-    top: auto !important;
-    left: auto !important;
-    transform: none !important;
-    margin: 0 !important;
-    padding: 0 !important;
-}
-
-/* Chat button hover effects */
-button[title="Open Chat"]:hover,
-button:contains("Chat"):not(:contains("🦆")):hover {
-    transform: scale(1.05) !important;
-    box-shadow: 0 6px 20px rgba(255, 199, 44, 0.6) !important;
-    background: linear-gradient(135deg, var(--mustard-gold-light) 0%, var(--mustard-gold) 100%) !important;
-    color: #FFFFFF !important;
-}
-
-/* Chat button active effects */
-button[title="Open Chat"]:active,
-button:contains("Chat"):not(:contains("🦆")):active {
-    transform: scale(0.98) !important;
-}
-
-/* ADDITIONAL STICKY POSITIONING - Force the chatbot button to stay fixed */
-#chatbot-button-container {
-    position: fixed !important;
-    bottom: 30px !important;
-    right: 30px !important;
-    z-index: 99999 !important;
-    width: 120px !important;
-    height: 50px !important;
-    pointer-events: auto !important;
-    display: block !important;
-    visibility: visible !important;
-}
-
-/* CHAT BUTTON CONTAINER */
-#chat-button-container {
-    position: fixed !important;
-    bottom: 90px !important;
-    right: 30px !important;
-    z-index: 99999 !important;
-    width: 80px !important;
-    height: 40px !important;
-    pointer-events: auto !important;
-    display: block !important;
-    visibility: visible !important;
-}
-
-/* Force any button inside the container to be properly styled */
-#chatbot-button-container button,
-#chatbot-button-container .stButton,
-#chatbot-button-container .stButton > button {
-    position: relative !important;
-    width: 100% !important;
-    height: 100% !important;
-    border-radius: 25px !important;
-    background: linear-gradient(135deg, #FFD700 0%, #FFC107 100%) !important;
-    border: none !important;
-    font-size: 16px !important;
-    font-weight: 600 !important;
-    color: #333333 !important;
-    cursor: pointer !important;
-    box-shadow: 0 4px 20px rgba(255, 215, 0, 0.4) !important;
-    transition: all 0.3s ease !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-}
-
-#chatbot-button-container button:hover {
-    transform: scale(1.05) !important;
-    box-shadow: 0 6px 25px rgba(255, 215, 0, 0.6) !important;
-    background: linear-gradient(135deg, #FFE135 0%, #FFD700 100%) !important;
-}
-
-/* Force any button inside the chat container to be properly styled */
-#chat-button-container button,
-#chat-button-container .stButton,
-#chat-button-container .stButton > button {
-    position: relative !important;
-    width: 100% !important;
-    height: 100% !important;
-    border-radius: 20px !important;
-    background: linear-gradient(135deg, var(--mustard-gold) 0%, var(--mustard-gold-light) 100%) !important;
-    border: none !important;
-    font-size: 14px !important;
-    font-weight: 600 !important;
-    color: #FFFFFF !important;
-    cursor: pointer !important;
-    box-shadow: 0 4px 15px rgba(255, 199, 44, 0.4) !important;
-    transition: all 0.3s ease !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-}
-
-#chat-button-container button:hover {
-    transform: scale(1.05) !important;
-    box-shadow: 0 6px 20px rgba(255, 199, 44, 0.6) !important;
-    background: linear-gradient(135deg, var(--mustard-gold-light) 0%, var(--mustard-gold) 100%) !important;
-}
-
-</style>
-
-<script>
-// Find and position both buttons after page loads
-document.addEventListener('DOMContentLoaded', function() {
-    setTimeout(function() {
-        // Find the buttons by text content
-        const buttons = document.querySelectorAll('button');
-        let chatbotButton = null;
-        let chatbotContainer = null;
-        let chatButton = null;
-        let chatContainer = null;
-        
-        buttons.forEach(function(btn) {
-            if (btn.textContent.includes('🦆 Toggle Chat')) {
-                console.log('Found chatbot button:', btn);
-                chatbotButton = btn;
-                chatbotContainer = btn.closest('[data-testid="stButton"]') || btn.closest('.stButton');
-            } else if (btn.textContent.trim() === 'Chat') {
-                console.log('Found chat button:', btn);
-                chatButton = btn;
-                chatContainer = btn.closest('[data-testid="stButton"]') || btn.closest('.stButton');
-            }
-        });
-        
-        // Handle chatbot button
-        if (chatbotButton && chatbotContainer) {
-            console.log('Moving chatbot button to fixed container');
-            
-            // Find the fixed container we created
-            const fixedContainer = document.getElementById('chatbot-button-container');
-            if (fixedContainer) {
-                // Move the entire button container into our fixed container
-                fixedContainer.appendChild(chatbotContainer);
-                
-                // Style the moved container
-                chatbotContainer.style.width = '100%';
-                chatbotContainer.style.height = '100%';
-                chatbotContainer.style.position = 'relative';
-                
-                // Style the button
-                chatbotButton.style.width = '100%';
-                chatbotButton.style.height = '100%';
-                chatbotButton.style.borderRadius = '25px';
-                chatbotButton.style.background = 'linear-gradient(135deg, #FFD700 0%, #FFC107 100%)';
-                chatbotButton.style.border = 'none';
-                chatbotButton.style.fontSize = '16px';
-                chatbotButton.style.fontWeight = '600';
-                chatbotButton.style.color = '#333333';
-                chatbotButton.style.cursor = 'pointer';
-                chatbotButton.style.boxShadow = '0 4px 20px rgba(255, 215, 0, 0.4)';
-                chatbotButton.style.transition = 'all 0.3s ease';
-                chatbotButton.style.display = 'flex';
-                chatbotButton.style.alignItems = 'center';
-                chatbotButton.style.justifyContent = 'center';
-                
-                console.log('Chatbot button moved to fixed container successfully');
-            } else {
-                console.log('Chatbot fixed container not found');
-            }
-        }
-        
-        // Handle chat button
-        if (chatButton && chatContainer) {
-            console.log('Moving chat button to fixed container');
-            
-            // Find the fixed container we created
-            const chatFixedContainer = document.getElementById('chat-button-container');
-            if (chatFixedContainer) {
-                // Move the entire button container into our fixed container
-                chatFixedContainer.appendChild(chatContainer);
-                
-                // Style the moved container
-                chatContainer.style.width = '100%';
-                chatContainer.style.height = '100%';
-                chatContainer.style.position = 'relative';
-                
-                // Style the button
-                chatButton.style.width = '100%';
-                chatButton.style.height = '100%';
-                chatButton.style.borderRadius = '20px';
-                chatButton.style.background = 'linear-gradient(135deg, #ffc72c 0%, #ffd54f 100%)';
-                chatButton.style.border = 'none';
-                chatButton.style.fontSize = '14px';
-                chatButton.style.fontWeight = '600';
-                chatButton.style.color = '#FFFFFF';
-                chatButton.style.cursor = 'pointer';
-                chatButton.style.boxShadow = '0 4px 15px rgba(255, 199, 44, 0.4)';
-                chatButton.style.transition = 'all 0.3s ease';
-                chatButton.style.display = 'flex';
-                chatButton.style.alignItems = 'center';
-                chatButton.style.justifyContent = 'center';
-                
-                console.log('Chat button moved to fixed container successfully');
-            } else {
-                console.log('Chat fixed container not found');
-            }
-        }
-        
-        if (!chatbotButton && !chatButton) {
-            console.log('No buttons found - available buttons:');
-            buttons.forEach((btn, i) => {
-                console.log(`Button ${i}:`, btn.textContent);
-            });
-        }
-        
-        // Keep trying to find and move both buttons with a more persistent approach
-        let attempts = 0;
-        const maxAttempts = 10;
-        
-        function findAndMoveButtons() {
-            attempts++;
-            console.log(`Attempt ${attempts} to find buttons`);
-            
-            const buttons = document.querySelectorAll('button');
-            let chatbotFound = false;
-            let chatFound = false;
-            
-            buttons.forEach(function(btn) {
-                // Handle ducK button
-                if (btn.textContent.includes('🦆 Toggle Chat')) {
-                    const container = btn.closest('[data-testid="stButton"]') || btn.closest('.stButton');
-                    const fixedContainer = document.getElementById('chatbot-button-container');
-                    
-                    if (container && fixedContainer && !fixedContainer.contains(container)) {
-                        console.log(`Found and moving chatbot button on attempt ${attempts}`);
-                        
-                        // Move to fixed container
-                        fixedContainer.appendChild(container);
-                        
-                        // Style the container and button
-                        container.style.width = '100%';
-                        container.style.height = '100%';
-                        container.style.position = 'relative';
-                        
-                        btn.style.width = '100%';
-                        btn.style.height = '100%';
-                        btn.style.borderRadius = '25px';
-                        btn.style.background = 'linear-gradient(135deg, #FFD700 0%, #FFC107 100%)';
-                        btn.style.border = 'none';
-                        btn.style.fontSize = '16px';
-                        btn.style.fontWeight = '600';
-                        btn.style.color = '#333333';
-                        btn.style.cursor = 'pointer';
-                        btn.style.boxShadow = '0 4px 20px rgba(255, 215, 0, 0.4)';
-                        btn.style.transition = 'all 0.3s ease';
-                        btn.style.display = 'flex';
-                        btn.style.alignItems = 'center';
-                        btn.style.justifyContent = 'center';
-                        
-                        chatbotFound = true;
-                        console.log('Chatbot button successfully moved and styled');
-                    }
-                }
-                
-                // Handle Chat button
-                if (btn.textContent.trim() === 'Chat') {
-                    const container = btn.closest('[data-testid="stButton"]') || btn.closest('.stButton');
-                    const chatFixedContainer = document.getElementById('chat-button-container');
-                    
-                    if (container && chatFixedContainer && !chatFixedContainer.contains(container)) {
-                        console.log(`Found and moving chat button on attempt ${attempts}`);
-                        
-                        // Move to fixed container
-                        chatFixedContainer.appendChild(container);
-                        
-                        // Style the container and button
-                        container.style.width = '100%';
-                        container.style.height = '100%';
-                        container.style.position = 'relative';
-                        
-                        btn.style.width = '100%';
-                        btn.style.height = '100%';
-                        btn.style.borderRadius = '20px';
-                        btn.style.background = 'linear-gradient(135deg, #ffc72c 0%, #ffd54f 100%)';
-                        btn.style.border = 'none';
-                        btn.style.fontSize = '14px';
-                        btn.style.fontWeight = '600';
-                        btn.style.color = '#FFFFFF';
-                        btn.style.cursor = 'pointer';
-                        btn.style.boxShadow = '0 4px 15px rgba(255, 199, 44, 0.4)';
-                        btn.style.transition = 'all 0.3s ease';
-                        btn.style.display = 'flex';
-                        btn.style.alignItems = 'center';
-                        btn.style.justifyContent = 'center';
-                        
-                        chatFound = true;
-                        console.log('Chat button successfully moved and styled');
-                    }
-                }
-            });
-            
-            if ((!chatbotFound || !chatFound) && attempts < maxAttempts) {
-                setTimeout(findAndMoveButtons, 1000);
-            } else if (!chatbotFound && !chatFound) {
-                console.log('Failed to find buttons after all attempts');
-            }
-        }
-        
-        // Start the persistent search
-        findAndMoveButtons();
-        
-    }, 1000);
-    
-    // Enhanced function to ensure buttons stay sticky
-    function ensureButtonsSticky() {
-        // Force position both containers
-        const chatbotContainer = document.getElementById('chatbot-button-container');
-        const chatContainer = document.getElementById('chat-button-container');
-        const stickyTextbox = document.getElementById('sticky-chat-textbox');
-        
-        if (chatbotContainer) {
-            chatbotContainer.style.position = 'fixed';
-            chatbotContainer.style.bottom = '30px';
-            chatbotContainer.style.right = '30px';
-            chatbotContainer.style.zIndex = '2147483647';
-            chatbotContainer.style.width = '120px';
-            chatbotContainer.style.height = '50px';
-            chatbotContainer.style.pointerEvents = 'auto';
-            chatbotContainer.style.display = 'block';
-            chatbotContainer.style.visibility = 'visible';
-        }
-        
-        // Ensure sticky text box stays positioned
-        if (stickyTextbox) {
-            stickyTextbox.style.position = 'fixed';
-            stickyTextbox.style.bottom = '90px';
-            stickyTextbox.style.right = '30px';
-            stickyTextbox.style.zIndex = '2147483646';
-            stickyTextbox.style.width = '280px';
-            stickyTextbox.style.height = '45px';
-            stickyTextbox.style.pointerEvents = 'auto';
-            stickyTextbox.style.display = 'flex';
-            stickyTextbox.style.visibility = 'visible';
-        }
-        
-        // Also directly style any toggle chat buttons found
-        const allButtons = document.querySelectorAll('button');
-        allButtons.forEach(function(btn) {
-            if (btn.textContent.includes('🦆 Toggle Chat')) {
-                btn.style.position = 'fixed';
-                btn.style.bottom = '30px';
-                btn.style.right = '30px';
-                btn.style.zIndex = '2147483647';
-                btn.style.width = '120px';
-                btn.style.height = '50px';
-                btn.style.pointerEvents = 'auto';
-                
-                // Also style the parent container
-                const parentContainer = btn.closest('[data-testid="stButton"]') || btn.closest('.stButton');
-                if (parentContainer) {
-                    parentContainer.style.position = 'fixed';
-                    parentContainer.style.bottom = '30px';
-                    parentContainer.style.right = '30px';
-                    parentContainer.style.zIndex = '2147483647';
-                    parentContainer.style.width = '120px';
-                    parentContainer.style.height = '50px';
-                    parentContainer.style.pointerEvents = 'auto';
-                }
-            }
-        });
-    }
-        
-        if (chatContainer) {
-            chatContainer.style.position = 'fixed';
-            chatContainer.style.bottom = '90px';
-            chatContainer.style.right = '30px';
-            chatContainer.style.zIndex = '999999';
-            chatContainer.style.width = '80px';
-            chatContainer.style.height = '40px';
-            chatContainer.style.pointerEvents = 'auto';
-            chatContainer.style.display = 'block';
-            chatContainer.style.visibility = 'visible';
-        }
-    }
-    
-    // Add event listeners to maintain sticky positioning during scroll and resize
-    window.addEventListener('scroll', ensureButtonsSticky, { passive: true });
-    window.addEventListener('resize', ensureButtonsSticky, { passive: true });
-    
-    // Also run on DOM mutations to catch dynamic content changes
-    const observer = new MutationObserver(function(mutations) {
-        let shouldUpdate = false;
-        mutations.forEach(function(mutation) {
-            if (mutation.type === 'childList' || mutation.type === 'attributes') {
-                shouldUpdate = true;
-            }
-        });
-        if (shouldUpdate) {
-            setTimeout(ensureButtonsSticky, 100);
-        }
-    });
-    
-    observer.observe(document.body, {
-        childList: true,
-        subtree: true,
-        attributes: true,
-        attributeFilter: ['style', 'class']
-    });
-    
-    // Run initial positioning
-    ensureButtonsSticky();
-    
-    // Run periodically to catch any missed updates
-    setInterval(ensureButtonsSticky, 2000);
-    
-    // Simplified global function to open chat from text box
-    window.openChatFromTextbox = function() {
-        console.log('Opening chat from text box...');
-        
-        // Look for the hidden button first
-        const hiddenButton = document.querySelector('button[title="Hidden button for text box"]');
-        if (hiddenButton) {
-            console.log('Found hidden button, clicking...');
-            hiddenButton.click();
-            return;
-        }
-        
-        // Fallback to main toggle button
-        const buttons = document.querySelectorAll('button');
-        for (let btn of buttons) {
-            if (btn.textContent.includes('🦆 Toggle Chat')) {
-                console.log('Clicking main toggle button...');
-                btn.click();
-                return;
-            }
-        }
-        
-        console.error('No chat buttons found!');
-    };
-    
-    // Also make triggerChatOpen available globally
-    window.triggerChatOpen = function() {
-        if (window.openChatFromTextbox) {
-            window.openChatFromTextbox();
-        }
-    };
-    
-    // Also ensure the text box is always positioned correctly
-    function ensureTextboxSticky() {
-        const stickyTextbox = document.getElementById('sticky-chat-textbox');
-        if (stickyTextbox) {
-            stickyTextbox.style.position = 'fixed';
-            stickyTextbox.style.bottom = '90px';
-            stickyTextbox.style.right = '30px';
-            stickyTextbox.style.zIndex = '2147483646';
-            stickyTextbox.style.pointerEvents = 'auto';
-        }
-    }
-    
-    // Enhanced function to find the toggle chat button
-    function findToggleChatButton() {
-        // Method 1: Look for button with specific text content
-        let buttons = document.querySelectorAll('button');
-        for (let btn of buttons) {
-            if (btn.textContent.includes('🦆 Toggle Chat')) {
-                return btn;
-            }
-        }
-        
-        // Method 2: Look in Streamlit button containers
-        let buttonContainers = document.querySelectorAll('[data-testid="stButton"]');
-        for (let container of buttonContainers) {
-            let btn = container.querySelector('button');
-            if (btn && btn.textContent.includes('🦆')) {
-                return btn;
-            }
-        }
-        
-        // Method 3: Look for buttons with duck emoji anywhere
-        for (let btn of buttons) {
-            if (btn.textContent.includes('🦆')) {
-                return btn;
-            }
-        }
-        
-        // Method 4: Look for buttons with "Toggle" and "Chat" in text
-        for (let btn of buttons) {
-            if (btn.textContent.includes('Toggle') && btn.textContent.includes('Chat')) {
-                return btn;
-            }
-        }
-        
-        return null;
-    }
-    
-    // Test function to verify button detection
-    function testButtonDetection() {
-        const btn = findToggleChatButton();
-        if (btn) {
-            console.log('Toggle chat button found:', btn);
-            console.log('Button text:', btn.textContent);
-            console.log('Button parent:', btn.parentElement);
-        } else {
-            console.log('Toggle chat button NOT found');
-            console.log('Available buttons:', document.querySelectorAll('button'));
-        }
-    }
-    
-    // Run test periodically
-    setInterval(testButtonDetection, 5000);
-    
-    // Run textbox positioning checks
-    setInterval(ensureTextboxSticky, 1000);
-        
-        // Force position any buttons that might have moved
-        const allButtons = document.querySelectorAll('button');
-        allButtons.forEach(function(btn) {
-            if (btn.textContent.includes('🦆 Toggle Chat')) {
-                btn.style.position = 'fixed';
-                btn.style.bottom = '30px';
-                btn.style.right = '30px';
-                btn.style.zIndex = '999999';
-            } else if (btn.textContent.trim() === 'Chat') {
-                btn.style.position = 'fixed';
-                btn.style.bottom = '90px';
-                btn.style.right = '30px';
-                btn.style.zIndex = '999999';
-            }
-        });
-    }
-    
-    // Run on scroll, resize, and periodically
-    window.addEventListener('scroll', ensureButtonsSticky);
-    window.addEventListener('resize', ensureButtonsSticky);
-    setInterval(ensureButtonsSticky, 2000); // Check every 2 seconds
-    
-    // Initial call
-    setTimeout(ensureButtonsSticky, 500);
-});
-</script>
-
-<!-- Fixed containers for sticky buttons with inline styles for maximum priority -->
-<div id="chatbot-button-container" style="position: fixed !important; bottom: 30px !important; right: 30px !important; z-index: 999999 !important; width: 120px !important; height: 50px !important; pointer-events: auto !important; display: block !important; visibility: visible !important;"></div>
-<div id="chat-button-container" style="position: fixed !important; bottom: 90px !important; right: 30px !important; z-index: 999999 !important; width: 80px !important; height: 40px !important; pointer-events: auto !important; display: block !important; visibility: visible !important;"></div>
-""", unsafe_allow_html=True)
-
-# Chatbot Modal - Pure HTML/CSS popup (no Streamlit widgets inside)
+# Simple Chatbot Interface (no popup)
 if st.session_state.show_chatbot:
-    # Initialize with welcome message if empty
-    if not st.session_state.chat_messages:
-        st.session_state.chat_messages.append({
-            "role": "bot", 
-            "content": "🦆 Quack! Hello! I'm your procurement assistant. Ask me about supplier diversity, the dashboard data, or small business procurement strategies!"
-        })
+    st.markdown("---")
+    st.markdown("### 🦆 Quack - Procurement Assistant")
     
-    # Build chat messages HTML
-    messages_html = ""
+    # Initialize chat messages if empty
+    if not st.session_state.chat_messages:
+        st.session_state.chat_messages = [{
+            "role": "assistant",
+            "content": "🦆 Quack! Hello! I'm Quack, your procurement assistant powered by Claude AI. I specialize in supplier diversity and can help you with:\n\n• **Supplier matching** - Find diverse suppliers for your needs\n• **25% small business targets** - Track and achieve your goals\n• **Procurement strategies** - Optimize your sourcing approach\n• **Dashboard insights** - Understand your diversity metrics\n\nWhat can I help you with today?"
+        }]
+    
+    # Display chat messages
     for message in st.session_state.chat_messages:
         if message["role"] == "user":
-            messages_html += f'<div class="chat-message user">{message["content"]}</div>'
+            st.markdown(f"**You:** {message['content']}")
         else:
-            messages_html += f'<div class="chat-message bot">{message["content"]}</div>'
+            st.markdown(f"**Quack:** {message['content']}")
     
-    # Create the complete modal as pure HTML
-    st.markdown(f"""
-    <div class="chatbot-modal">
-        <div class="chatbot-header">
-            <div>
-                <span>🦆 Quack - Procurement Assistant</span>
-            </div>
-            <button class="chatbot-close" onclick="document.querySelector('button[key=\\"chatbot_toggle_main\\"]').click()">×</button>
-        </div>
-        <div class="chatbot-messages" id="chat-messages">
-            {messages_html}
-        </div>
-        <div class="chatbot-input">
-            <input type="text" id="chat-input" placeholder="Type your question here..." />
-            <button id="chat-send" onclick="sendMessage()">Send 🦆</button>
-        </div>
-    </div>
+    # Use a form to handle Enter key functionality properly
+    with st.form(key="chat_form", clear_on_submit=True):
+        col1, col2 = st.columns([4, 1])
+        
+        with col1:
+            user_input = st.text_input("Ask me anything:", placeholder="E.g., How can I improve my supplier diversity?", label_visibility="collapsed")
+        
+        with col2:
+            send_clicked = st.form_submit_button("Send 🦆")
     
-    <script>
-    // Function to open chat from the sticky text box
-    function openChatFromTextbox() {{
-        console.log('Opening chat from text box (modal version)...');
+    # Process the message if form was submitted
+    if send_clicked and user_input:
+        # Add user message
+        st.session_state.chat_messages.append({
+            "role": "user",
+            "content": user_input
+        })
         
-        // Use the same logic as the global function
-        let toggleButton = document.querySelector('button[data-testid="baseButton-secondary"][title="Toggle Quack Chat"]');
+        # Get AI response
+        try:
+            if CHATBOT_AVAILABLE:
+                # Check if the question is relevant to procurement/supplier diversity
+                relevance_check = f"Is this question related to procurement, supplier diversity, small business, contracting, sourcing, or business operations? Question: '{user_input}'. Answer only 'YES' or 'NO'."
+                relevance_response = get_chatbot_response(relevance_check)
+                
+                if "NO" in relevance_response.upper():
+                    bot_response = f"🦆 Quack! I'm specifically designed to help with procurement and supplier diversity topics. I cannot help you with '{user_input}'. \n\nI'd be happy to assist you with:\n• Supplier diversity strategies\n• Small business procurement goals\n• Dashboard insights and metrics\n• Procurement best practices\n\nWhat procurement-related question can I help you with today?"
+                else:
+                    # Enhanced context for better responses
+                    context = f"You are Quack, a helpful procurement assistant specializing in supplier diversity. The user asked: '{user_input}'. Provide a helpful, specific response about supplier diversity, procurement strategies, or dashboard insights. Keep responses conversational but informative. Stay focused on procurement topics only."
+                    response = get_chatbot_response(context + " User question: " + user_input)
+                    # Clean up response and add Quack personality
+                    bot_response = response.replace("🤖 ", "").replace("Claude", "Quack")
+                    if not bot_response.startswith("🦆"):
+                        bot_response = f"🦆 {bot_response}"
+            else:
+                bot_response = "🦆 Quack! I'm currently having trouble connecting to my AI brain. Please make sure the chatbot service is properly configured, and I'll be right back to help with your procurement needs!"
+            
+            st.session_state.chat_messages.append({
+                "role": "assistant", 
+                "content": bot_response
+            })
+        except Exception as e:
+            st.session_state.chat_messages.append({
+                "role": "assistant",
+                "content": f"🦆 Oops! I encountered a technical issue: {str(e)}. Please check the AWS configuration or try again in a moment."
+            })
         
-        if (!toggleButton) {{
-            const buttons = document.querySelectorAll('button');
-            buttons.forEach(function(btn) {{
-                if (btn.textContent.includes('🦆 Toggle Chat')) {{
-                    toggleButton = btn;
-                }}
-            }});
-        }}
-        
-        if (!toggleButton) {{
-            const buttonContainers = document.querySelectorAll('[data-testid="stButton"]');
-            buttonContainers.forEach(function(container) {{
-                const btn = container.querySelector('button');
-                if (btn && btn.textContent.includes('🦆 Toggle Chat')) {{
-                    toggleButton = btn;
-                }}
-            }});
-        }}
-        
-        if (toggleButton) {{
-            toggleButton.click();
-            setTimeout(function() {{
-                const chatInput = document.getElementById('chat-input');
-                if (chatInput) {{
-                    chatInput.focus();
-                }}
-            }}, 500);
-        }}
-    }}
+        st.rerun()
     
-    function sendMessage() {{
-        const input = document.getElementById('chat-input');
-        const message = input.value.trim();
-        if (message) {{
-            // For now, just show an alert - we'd need a more complex setup to actually process messages
-            alert('Message sent: ' + message);
-            input.value = '';
-        }}
-    }}
-    
-    // Allow Enter key to send message
-    document.getElementById('chat-input').addEventListener('keypress', function(e) {{
-        if (e.key === 'Enter') {{
-            sendMessage();
-        }}
-    }});
-    </script>
-    """, unsafe_allow_html=True)
-
-# ULTIMATE CSS OVERRIDE - MAXIMUM SPECIFICITY FOR STICKY BUTTONS
-st.markdown(f"""
-<style>
-/* ULTIMATE OVERRIDE - FORCE STICKY POSITIONING WITH HIGHEST POSSIBLE SPECIFICITY */
-html body .stApp .main .block-container #chatbot-button-container,
-html body .stApp .main #chatbot-button-container,
-html body .stApp #chatbot-button-container,
-html body #chatbot-button-container,
-#chatbot-button-container {{
-    position: fixed !important;
-    bottom: 30px !important;
-    right: 30px !important;
-    z-index: 2147483647 !important;
-    width: 120px !important;
-    height: 50px !important;
-    pointer-events: auto !important;
-    display: block !important;
-    visibility: visible !important;
-    top: auto !important;
-    left: auto !important;
-    transform: none !important;
-    margin: 0 !important;
-    padding: 0 !important;
-}}
-
-html body .stApp .main .block-container #chat-button-container,
-html body .stApp .main #chat-button-container,
-html body .stApp #chat-button-container,
-html body #chat-button-container,
-#chat-button-container {{
-    position: fixed !important;
-    bottom: 90px !important;
-    right: 30px !important;
-    z-index: 2147483647 !important;
-    width: 80px !important;
-    height: 40px !important;
-    pointer-events: auto !important;
-    display: block !important;
-    visibility: visible !important;
-    top: auto !important;
-    left: auto !important;
-    transform: none !important;
-    margin: 0 !important;
-    padding: 0 !important;
-}}
-
-/* FORCE BUTTON POSITIONING WITH ABSOLUTE MAXIMUM SPECIFICITY */
-html body .stApp .main .block-container button[title="Toggle Quack Chat"],
-html body .stApp .main .block-container button:contains("🦆 Toggle Chat"),
-html body .stApp .main button[title="Toggle Quack Chat"],
-html body .stApp .main button:contains("🦆 Toggle Chat"),
-html body .stApp button[title="Toggle Quack Chat"],
-html body .stApp button:contains("🦆 Toggle Chat"),
-html body button[title="Toggle Quack Chat"],
-html body button:contains("🦆 Toggle Chat"),
-button[title="Toggle Quack Chat"],
-button:contains("🦆 Toggle Chat") {{
-    position: fixed !important;
-    bottom: 30px !important;
-    right: 30px !important;
-    z-index: 2147483647 !important;
-    width: 120px !important;
-    height: 50px !important;
-    top: auto !important;
-    left: auto !important;
-    transform: none !important;
-    margin: 0 !important;
-    padding: 0 !important;
-}}
-
-html body .stApp .main .block-container button[title="Open Chat"],
-html body .stApp .main .block-container button:contains("Chat"):not(:contains("🦆")),
-html body .stApp .main button[title="Open Chat"],
-html body .stApp .main button:contains("Chat"):not(:contains("🦆")),
-html body .stApp button[title="Open Chat"],
-html body .stApp button:contains("Chat"):not(:contains("🦆")),
-html body button[title="Open Chat"],
-html body button:contains("Chat"):not(:contains("🦆")),
-button[title="Open Chat"],
-button:contains("Chat"):not(:contains("🦆")) {{
-    position: fixed !important;
-    bottom: 90px !important;
-    right: 30px !important;
-    z-index: 2147483647 !important;
-    width: 80px !important;
-    height: 40px !important;
-    top: auto !important;
-    left: auto !important;
-    transform: none !important;
-    margin: 0 !important;
-    padding: 0 !important;
-}}
-</style>
-""", unsafe_allow_html=True)
-
-# FINAL OVERRIDE - CLEAN UP - No longer needed since we only have yellow button
-st.markdown(f"""
-<style>
-    /* CHATBOT MODAL POSITIONING */
-    .chatbot-modal {{
-        position: fixed !important;
-        bottom: 90px !important;
-        right: 30px !important;
-        width: 350px !important;
-        height: 500px !important;
-        background: {theme['bg_card']} !important;
-        border-radius: 15px !important;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3) !important;
-        z-index: 10000 !important;
-        display: flex !important;
-        flex-direction: column !important;
-        border: 2px solid var(--mustard-gold) !important;
-        backdrop-filter: blur(10px) !important;
-    }}
-</style>
-""", unsafe_allow_html=True)
+    if st.button("Clear Chat", key="clear_simple_chat"):
+        st.session_state.chat_messages = []
+        st.rerun()
 
 # About Page Content
 def render_about_page():
@@ -2082,7 +1117,7 @@ if data_loaded and 'error' not in data['current_stats']:
     
     # Big Numbers Section - PO Quantities
     st.markdown('<div class="dashboard-card">', unsafe_allow_html=True)
-    st.markdown("## 📊 Purchase Order Percentage Analysis")
+    st.markdown("## Purchase Order Percentage Analysis")
     
     col1, col2, col3 = st.columns(3)
     
@@ -2153,7 +1188,7 @@ if data_loaded and 'error' not in data['current_stats']:
     
     with col2:
         # Optimal Path to Exactly 25% (moved from scenarios section)
-        st.markdown("### 🎯 Optimal Path to Exactly 25%")
+        st.markdown("### Optimal Path to Exactly 25%")
         
         if 'error' not in data['optimization_plan']:
             opt_plan = data['optimization_plan']
@@ -2193,7 +1228,7 @@ if data_loaded and 'error' not in data['current_stats']:
         opt_plan = data['optimization_plan']
         
         st.markdown('<div class="dashboard-card">', unsafe_allow_html=True)
-        st.markdown("## 🚀 PO Transition Scenarios to Reach 25%")
+        st.markdown("## PO Transition Scenarios to Reach 25%")
         
         scenarios = opt_plan['scenarios']
         
@@ -2207,7 +1242,7 @@ if data_loaded and 'error' not in data['current_stats']:
                 <p><strong>POs to transition:</strong> {high_conf['pos_to_transition']:,}</p>
                 <p><strong>Resulting %:</strong> {high_conf['resulting_percentage']:.1f}%</p>
                 <p><strong>Total small business POs:</strong> {high_conf['resulting_small_business_pos']:,}</p>
-                {'<p style="color: #51cf66;"><strong>✅ TARGET ACHIEVED!</strong></p>' if high_conf['target_achieved'] else '<p style="color: #ff6b6b;"><strong>❌ Target not reached</strong></p>'}
+                {'<p style="color: #51cf66;"><strong>TARGET ACHIEVED!</strong></p>' if high_conf['target_achieved'] else '<p style="color: #ff6b6b;"><strong>Target not reached</strong></p>'}
             </div>
             """, unsafe_allow_html=True)
         
@@ -2219,7 +1254,7 @@ if data_loaded and 'error' not in data['current_stats']:
                 <p><strong>POs to transition:</strong> {med_conf['pos_to_transition']:,}</p>
                 <p><strong>Resulting %:</strong> {med_conf['resulting_percentage']:.1f}%</p>
                 <p><strong>Total small business POs:</strong> {med_conf['resulting_small_business_pos']:,}</p>
-                <p style="color: #51cf66;"><strong>✅ TARGET EXCEEDED!</strong></p>
+                <p style="color: #51cf66;"><strong>TARGET EXCEEDED!</strong></p>
             </div>
             """, unsafe_allow_html=True)
         
@@ -2240,7 +1275,7 @@ if data_loaded and 'error' not in data['current_stats']:
     # Implementation Phases
     if opt_plan.get('implementation_phases'):
         st.markdown('<div class="dashboard-card">', unsafe_allow_html=True)
-        st.markdown("## 📅 Phased Implementation Plan")
+        st.markdown("## Phased Implementation Plan")
         
         phases_df = pd.DataFrame(opt_plan['implementation_phases'])
         
@@ -2298,7 +1333,7 @@ if data_loaded and 'error' not in data['current_stats']:
     # Quick Wins - PO Focused
     if data['quick_wins']:
         st.markdown('<div class="dashboard-card">', unsafe_allow_html=True)
-        st.markdown("## ⚡ Top PO Transition Opportunities")
+        st.markdown("## Top PO Transition Opportunities")
         
         quick_wins_df = pd.DataFrame(data['quick_wins'])
         quick_wins_df['Purchase_Amount'] = quick_wins_df['Purchase_Amount'].apply(lambda x: f"${x:,.2f}")
@@ -2340,7 +1375,7 @@ if data_loaded and 'error' not in data['current_stats']:
     # Supplier Transition Analysis
     if 'error' not in data['supplier_analysis']:
         st.markdown('<div class="dashboard-card">', unsafe_allow_html=True)
-        st.markdown("## 🔄 Current Suppliers with Most PO Transition Opportunities")
+        st.markdown("## Current Suppliers with Most PO Transition Opportunities")
         
         supplier_data = data['supplier_analysis']['top_suppliers_by_po_count']
         
